@@ -1,0 +1,17 @@
+<div class="home">
+  <label>Auto Test Center</label>
+  <button class="new-project" (click)='newProject()'>Create Project</button>
+  <button class="export-project" (click)='exportProject()>Export select Project</button>
+  <div class="row project" *ngFor='let project of projects'>
+       <span class="select-icon col-xs-1" (click)='selectProject(project.project_air_id)'>
+       </span>
+       <ul>
+         <li> <span>Base Url:</span><a href="project.base_url">{{project.base_url}}</a> </li>
+         <li> <span>Project Name:</span><span>{{project.project_name}}</span> </li>
+         <li> <span>Description:</span><span>{{project.project_description}}</span> </li>
+         <li> <span>Scenario Count:</span><span>{{project.scenarios.length}}</span> </li>
+       </ul>
+       <button class="edit" (click)='editProject(project)'>Edit</button>
+       <button class="view" (click)='viewProject(project)'>View</button>
+  </div>
+</div>

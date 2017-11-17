@@ -1,0 +1,47 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="myModalLabel">One Test Case</h4>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-xs-6">
+          <label for="casename" ></label>
+          <input type="text" name="casename" placeholder="enter the value" [(ngModel)]="step.operatevalue">
+        </div>
+        <div class="col-xs-6">
+          <label for="casedescription"></label>
+          <input type="text" name="casedescription" placeholder="enter the case description" [(ngModel)]="step.operatevalue">
+        </div>
+      </div>
+      <div class="row" *ngFor='let step of casestep'>
+        <div class="col-xs-5">
+          <select class="span3" [(ngModel)]="step.operate">
+                <option  *ngFor="let operate of operations" (click)='chooseOperation(operate,step)' [selected]="operate === step.operate" >{{operate}}</option>
+              </select>
+          <label for="operatevalue" *ngIf='step.operate === "Input"'>{{step.operate}}:</label>
+          <input type="text" *ngIf='step.operate === "Input"'name="operatevalue" placeholder="enter the value" [(ngModel)]="step.operatevalue">
+        </div>
+
+        <div class="col-xs-5">
+          <select class="span3" [(ngModel)]="step.selector">
+                <option  *ngFor="let selector of selectors" [selected]="selector === step.selector" (click)='chooseSelector(selector)'>{{selector}}</option>
+              </select>
+          <label for="selectorvalue">{{step.selector}}:</label>
+          <input type="text" name="selectorvalue" placeholder="enter the value" [(ngModel)]="step.selectorvalue">
+        </div>
+
+        <div class="col-xs-2">
+          <button type="button" name="button" (click)="addnew()">Add</button>
+          <button type="button" name="button" (click)="removeCurrent(step)">Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)='createcase()'>Create</button>
+    </div>
+  </div>
+</div>

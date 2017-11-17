@@ -1,0 +1,24 @@
+<label for="rooturl">WebSite Address:</label>
+<input id="rooturlid" type="text" name="rooturl" placeholder="Please input the root url of your test website" [(ngModel)]="rootUrl">
+<br />
+<button type="button" name="createcase" data-toggle="modal" data-target="#myModal">New Test Case</button>
+<button type="button" id='export' (click)='exportTestCase()'>Export TestCase</button>
+<a id='testcasefile' href="#" hidden="hidden" ></a>
+<div class="all-case" *ngIf='allcase'>
+    <div *ngFor='let case of allcase; let i = index'>
+          <ul *ngIf='case'>
+            case {{i+1}}:
+            <li *ngFor='let step of case'>
+              <span>{{step.order}}</span>
+              <span>{{step.operate}}</span>
+              <span>{{step.operatevalue}}</span>
+              <span>{{step.selector}}</span>
+              <span>{{step.selectorvalue}}</span>
+            </li>
+          </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <case-step [casestep]='onecase' (case)="getNewCase($event)"></case-step>
+</div>
