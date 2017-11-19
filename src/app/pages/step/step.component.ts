@@ -27,12 +27,12 @@ export class StepComponent implements OnInit {
     this.selectOperation = operate;
   }
   addnew(): void {
-    this.casestep.push({ order: this.casestep.length + 1, operate: 'Click', operatevalue: '', selector: 'ID', selectorvalue: '' })
+    this.casestep.steps.push({ order: this.casestep.steps.length + 1, operate: 'Click', operatevalue: '', selector: 'ID', selectorvalue: '' })
   }
 
   removeCurrent(): void {
-    if (this.casestep.length > 1) {
-      this.casestep.pop();
+    if (this.casestep.steps.length > 1) {
+      this.casestep.steps.pop();
     }
   }
   createcase(): void {

@@ -1,5 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<router-outlet></router-outlet>
+<nav class="layout-head">
+  <img src="../assets/logo.jpg" class="logo" alt="Loading">
+  <label class="title">Auto Test Center</label>
+  <a type="button" name="button" class="singin"> <span class="glyphicon glyphicon-user"> Sign in</span></a>
+</nav>
+<div class="layout-content">
+  <router-outlet></router-outlet>
+</div>
 <nav class="layout-foot">
   <a routerLink="/home" routerLinkActive="active" class="col-xs-6">Home</a>
   <a routerLink="/extension" routerLinkActive="active" class="col-xs-6">Extension</a>

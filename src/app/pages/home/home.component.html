@@ -1,7 +1,14 @@
 <div class="home">
-  <label>Auto Test Center</label>
-  <button class="new-project" (click)='newProject()'>Create Project</button>
-  <button class="export-project" (click)='exportProject()>Export select Project</button>
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search for project...">
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">Go!</button>
+    </span>
+  </div><!-- /input-group -->
+  <div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
+  <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
+</div>
   <div class="row project" *ngFor='let project of projects'>
        <span class="select-icon col-xs-1" (click)='selectProject(project.project_air_id)'>
        </span>

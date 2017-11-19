@@ -10,8 +10,9 @@ import * as $ from 'jquery'
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  projects:AllProject;
-  private router:Router
+  projects = AllProject;
+  selectProjects=[];
+  private router: Router
   constructor() {
 
   }
@@ -20,33 +21,34 @@ export class HomeComponent implements OnInit {
 
   }
 
-  editProject(project: ProjectModule): void{
-     this.router.navigate(['/project', project.project_air_id]);
+  newProject(): void {
+    this.router.navigate(['/project', 0]);
   }
 
-  viewProject(project:ProjectModule, IsView: number): void{
-     this.router.navigate(['/project', project.project_air_id]);
+  editProject(project: ProjectModule): void {
+    this.router.navigate(['/project', project.project_air_id]);
   }
 
+  viewProject(project: ProjectModule, IsView: number): void {
+    this.router.navigate(['/project', project.project_air_id]);
+  }
 
+  selectProject(id: number): void {
+    this.selectProjects.push(id);
+  }
 
-  exportSelectProject():void{
-    var aLink =<HTMLLinkElement>document.getElementById("testcasefile");
-    let result = [];
-    for (let i = 0; i < this.allcase.length; i++) {
-      let steps = [];
-      for (let j = 0; j < this.allcase[i].length; j++) {
-        steps.push({ action: this.allcase[i][j].operate, enterValue: this.allcase[i][j].operatevalue, type: this.allcase[i][j].selector, typePath: this.allcase[i][j].selectorvalue})
-      }
-      console.log(steps)
-      result.push({ base_url: this.rootUrl,casename: events: steps});
+  exportSelectProject(): void {
+    var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
+    let result: ProjectModule[];
+    for (let index = 0; index< this.selectProjects.length;index++) {
+      result.push(this.projects[index]);
     }
     var content = JSON.stringify(result);
     var blob = new Blob([content]);
     //aLink.download = "TestCase.json";
-  //aLink.href = URL.createObjectURL(blob);
-    aLink.setAttribute( 'href', URL.createObjectURL(blob));
-    aLink.setAttribute( 'download', "TestCase.json");
+    //aLink.href = URL.createObjectURL(blob);
+    aLink.setAttribute('href', URL.createObjectURL(blob));
+    aLink.setAttribute('download', "TestCase.json");
     aLink.click();
     window.URL.revokeObjectURL(aLink.href);
   }
