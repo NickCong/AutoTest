@@ -1,0 +1,28 @@
+<label for="scenario-name">Scenario Name:</label>
+<input id="scenarionameid" type="text" name="scenario-name" placeholder="Please input the scenario name" [(ngModel)]="scenario.scenario_name">
+<br />
+<label for="scenario-description">Scenario Description:</label>
+<input id="scenarionameid" type="text" name="scenario-description" placeholder="Please input the scenario description" [(ngModel)]="scenario.scenario_description">
+<br />
+<button type="button" name="savescenario" id='savescenarioid' (click)='saveScenario()'>Save Scenario</button>
+<button type="button" name="createcase" data-toggle="modal" data-target="#myModal">New Test Case</button>
+<button type="button" id='export' (click)='exportTestCase()'>Export TestCase</button>
+<a id='testcasefile' href="#" hidden="hidden" ></a>
+<div class="all-case" *ngIf='scenario.cases != undefined && scenario.cases != null'>
+    <div *ngFor='let case of scenario.cases; let i = index'>
+          <ul *ngIf='case'>
+            case {{i+1}}:
+            <li *ngFor='let step of case.steps'>
+              <span>{{step.order}}</span>
+              <span>{{step.action}}</span>
+              <span>{{step.enterValue}}</span>
+              <span>{{step.type}}</span>
+              <span>{{step.typePath}}</span>
+            </li>
+          </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <case-step [casestep]='onecase' (case)="getNewCase($event)"></case-step>
+</div>

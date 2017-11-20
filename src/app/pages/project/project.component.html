@@ -1,24 +1,36 @@
 <label for="rooturl">WebSite Address:</label>
-<input id="rooturlid" type="text" name="rooturl" placeholder="Please input the root url of your test website" [(ngModel)]="rootUrl">
+<input id="rooturlid" type="text" name="rooturl" placeholder="Please input the root url of your test website" [(ngModel)]="currentProject.base_url">
 <br />
-<button type="button" name="createcase" data-toggle="modal" data-target="#myModal">New Test Case</button>
-<button type="button" id='export' (click)='exportTestCase()'>Export TestCase</button>
+<label for="user">User:</label>
+<input id="userid" type="text" name="user" placeholder="Please input the login user of your test website" [(ngModel)]="currentProject.user">
+<br />
+<label for="password">Password:</label>
+<input id="passwordid" type="text" name="password" placeholder="Please input the user's password of your test website" [(ngModel)]="currentProject.password">
+<br />
+<label for="project-name">Project Name:</label>
+<input id="projectnameid" type="text" name="project-name" placeholder="Please input the project name" [(ngModel)]="currentProject.project_name">
+<br />
+<label for="project-description">Project Description:</label>
+<input id="projectnameid" type="text" name="project-description" placeholder="Please input the project description" [(ngModel)]="currentProject.project_description">
+<br />
+<button type="button" name="saveproject" id='saveprojectid' (click)='saveProject()'>Save Project</button>
+<button *ngIf='currentProjectId>0' type="button" id='createScenarioid' (click)='newScenario()'>New Scenario</button>
+<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' (click)='exportScenario()'>Export Select Scenario</button>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
-<div class="all-case" *ngIf='allcase'>
-    <div *ngFor='let case of allcase; let i = index'>
-          <ul *ngIf='case'>
-            case {{i+1}}:
-            <li *ngFor='let step of case'>
-              <span>{{step.order}}</span>
-              <span>{{step.operate}}</span>
-              <span>{{step.operatevalue}}</span>
-              <span>{{step.selector}}</span>
-              <span>{{step.selectorvalue}}</span>
-            </li>
-          </ul>
-    </div>
-</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <case-step [casestep]='onecase' (case)="getNewCase($event)"></case-step>
+<div class="scenariolist" *ngIf='currentProjectId>0'>
+  <div *ngFor='let scenario of currentProject.scenarios'>
+    <ul *ngIf='scenario'>
+      <li> <span>scenario_name:</span><span> {{scenario.scenario_name}} </span> </li>
+      <li> <span>scenario_description:</span> <span> {{scenario.scenario_description}} </span> </li>
+      <li *ngIf='scenario.scenario_url'>
+        <ul  *ngFor='let scenariostep of scenario.scenario_url;let i = index'>
+          <li> <span> action: </span> <span>  </span> </li>
+          <li> <span> value:  </span> <span>  </span> </li>
+        </ul>
+      </li>
+      <li>
+        <button type="button" name="editscenario" id='editscenarioid' (click)='editScenario(i)'>Edit Scenario</button>
+      </li>
+    </ul>
+  </div>
 </div>

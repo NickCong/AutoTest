@@ -9,6 +9,7 @@
   <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
   <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
 </div>
+<a id='testcasefile' href="#" hidden="hidden" ></a>
   <div class="row project" *ngFor='let project of projects'>
        <span class="select-icon col-xs-1" (click)='selectProject(project.project_air_id)'>
        </span>

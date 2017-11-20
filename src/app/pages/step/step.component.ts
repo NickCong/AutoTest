@@ -14,20 +14,13 @@ export class StepComponent implements OnInit {
   @Output() protected case: EventEmitter<CaseModule> = new EventEmitter();
   operations = Operations;
   selectors = Selectors;
-  selectorType: '';
-  selectOperation: '';
   constructor() { }
 
   ngOnInit() {
   }
-  chooseSelector(type): void {
-    this.selectorType = type;
-  }
-  chooseOperation(operate): void {
-    this.selectOperation = operate;
-  }
+
   addnew(): void {
-    this.casestep.steps.push({ order: this.casestep.steps.length + 1, operate: 'Click', operatevalue: '', selector: 'ID', selectorvalue: '' })
+    this.casestep.steps.push({ order: this.casestep.steps.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' })
   }
 
   removeCurrent(): void {

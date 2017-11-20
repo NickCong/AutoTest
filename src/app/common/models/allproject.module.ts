@@ -1,2 +1,9 @@
 import { ProjectModule } from '../../common/models/project.module';
-export let AllProject :ProjectModule[];
+import { NgModule } from '@angular/core';
+@NgModule({})
+export class AllProject {
+   Projects: ProjectModule[];
+constructor() {
+  this.Projects = [];
+}
+}

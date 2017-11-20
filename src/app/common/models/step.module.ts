@@ -1,7 +1,7 @@
 export class StepModule {
-   order:number;
-   operate:string;
-   operatevalue:string;
-   selector:string;
-   selectorvalue:string;
- }
+  order: number;
+  action: string;
+  enterValue: string;
+  type: string;
+  typePath: string;
+}

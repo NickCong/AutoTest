@@ -12,6 +12,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { ExtensionComponent } from './pages/extension/extension.component';
 import { StepComponent } from './pages/step/step.component';
 import { ProjectComponent } from './pages/project/project.component';
+import { ScenarioComponent } from './pages/scenario/scenario.component';
+import { AllProject } from './common/models/allproject.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { ProjectComponent } from './pages/project/project.component';
     HomeComponent,
     ExtensionComponent,
     StepComponent,
-    ProjectComponent
+    ProjectComponent,
+    ScenarioComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,8 @@ import { ProjectComponent } from './pages/project/project.component';
     HttpModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AppRouteModule
+    AppRouteModule,
+    AllProject
   ],
   providers: [],
   bootstrap: [AppComponent]

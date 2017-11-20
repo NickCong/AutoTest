@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { StepComponent } from '../step/step.component'
 import { StepModule } from '../../common/models/step.module'
 import { HttpModule } from '@angular/http';
 import { ScenarioModule } from '../../common/models/scenario.module';
-import { CaseModule } from '../../common/models/case.module';
 import { ProjectModule } from '../../common/models/project.module';
+import { AllProject } from '../../common/models/allproject.module';
+import 'rxjs/add/operator/switchMap';
 import * as $ from 'jquery'
 
 @Component({
@@ -14,62 +16,63 @@ import * as $ from 'jquery'
 })
 
 export class ProjectComponent implements OnInit {
-  rootUrl: string;
-  project: ProjectModule;
+
+  currentProjectIdstr: string;
+  currentProjectId: number;
+  currentProject: ProjectModule;
   scenario: ScenarioModule;
-  allcase: CaseModule[];
-  onecase: CaseModule;
-  newsteporder: number;
-  constructor() {
-    this.onecase = {
-      case_name: '',
-      case_id: '',
-      case_description: '',
-      case_expect_result: '',
-      case_actual_result: '',
-      steps: [{ order: 1, operate: 'Click', operatevalue: '', selector: 'ID', selectorvalue: '' }]
-}
+  projects:ProjectModule[];
+  newproject_air_id: number;
+  newscenarioid: number;
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
+    this.projects = global.Projects;
+    this.route.paramMap
+      .switchMap((params: ParamMap) => params.getAll('id'))
+      .subscribe(h => this.currentProjectIdstr = h);
+    console.log(this.currentProjectIdstr);
+    this.newproject_air_id = parseInt(this.currentProjectIdstr);
+    this.currentProjectId = parseInt(this.currentProjectIdstr);
+    if (this.newproject_air_id > 0) {
+      this.currentProject = this.projects[this.newproject_air_id - 1];
+      this.newscenarioid = this.currentProject.scenarios.length + 1;
+    }
+    else {
+      this.currentProject = {
+        base_url: '', user: '', password: '',
+        project_name: '',
+        project_air_id: '',
+        project_description: '',
+        scenarios: []
+      }
+      this.newproject_air_id = this.projects.length + 1;
+      this.newscenarioid = 1;
+    }
   }
 
   ngOnInit() {
-    let self = this;
-  }
+    /*this.route.paramMap
+      .switchMap((params: ParamMap) => this.heroService.getHeroes3(+params.getAll('id')))
+      .subscribe(h => this.hero = h);*/
 
-  getNewCase(newCase): void {
-    this.allcase.push(newCase);
-    this.onecase = {
-      case_name: '',
-      case_id: '',
-      case_description: '',
-      case_expect_result: '',
-      case_actual_result: '', steps: [{ order: 1, operate: 'Click', operatevalue: '', selector: 'ID', selectorvalue: '' }]
-};
   }
-  exportTestCase(): void {
+  editScenario(scenarioid): void {
+    alert(scenarioid);
+    this.router.navigate(['/scenario', { projectid: this.newproject_air_id, scenarioid: scenarioid}]);
+  }
+  exportScenario(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
-    let result = [];
-    for (let i = 0; i < this.allcase.length; i++) {
-      let steps = [];
-      for (let j = 0; j < this.allcase[i].steps.length; j++) {
-        steps.push({ action: this.allcase[i][j].operate, enterValue: this.allcase[i][j].operatevalue, type: this.allcase[i][j].selector, typePath: this.allcase[i][j].selectorvalue })
-      }
-      console.log(steps)
-      result.push({
-        case_name: '',
-        case_id: '',
-        case_description: '',
-        case_expect_result: '',
-        case_actual_result: '',
-        steps: steps
-      });
-    }
-    var content = JSON.stringify(result);
+    var content = JSON.stringify([this.currentProject]);
     var blob = new Blob([content]);
-    //aLink.download = "TestCase.json";
-    //aLink.href = URL.createObjectURL(blob);
     aLink.setAttribute('href', URL.createObjectURL(blob));
     aLink.setAttribute('download', "TestCase.json");
     aLink.click();
     window.URL.revokeObjectURL(aLink.href);
+  }
+  newScenario(): void {
+    this.router.navigate(['/scenario', { projectid: this.newproject_air_id, scenarioid: this.newscenarioid }]);
+  }
+  saveProject(): void {
+    this.currentProject.project_air_id = this.newproject_air_id.toString();
+    this.projects.push(this.currentProject);
   }
 }

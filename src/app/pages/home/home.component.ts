@@ -10,11 +10,12 @@ import * as $ from 'jquery'
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  projects = AllProject;
-  selectProjects=[];
-  private router: Router
-  constructor() {
+  projects:ProjectModule[];
+  selectProjects:number[];
 
+  constructor(private router: Router, global: AllProject) {
+   this.projects = global.Projects;
+   this.selectProjects = [];
   }
 
   ngOnInit() {
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
   }
 
   newProject(): void {
-    this.router.navigate(['/project', 0]);
+    this.router.navigate(['/project', '-1']);
   }
 
   editProject(project: ProjectModule): void {

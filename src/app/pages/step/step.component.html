@@ -6,30 +6,38 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-3">
           <label for="casename" ></label>
-          <input type="text" name="casename" placeholder="enter the value" [(ngModel)]="step.operatevalue">
+          <input type="text" name="casename" placeholder="enter the case name" [(ngModel)]="casestep.case_name">
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-3">
           <label for="casedescription"></label>
-          <input type="text" name="casedescription" placeholder="enter the case description" [(ngModel)]="step.operatevalue">
+          <input type="text" name="casedescription" placeholder="enter the case description" [(ngModel)]="casestep.case_description">
+        </div>
+        <div class="col-xs-3">
+          <label for="expectionresult" ></label>
+          <input type="text" name="expectionresult" placeholder="enter the expection result" [(ngModel)]="casestep.case_expect_result">
+        </div>
+        <div class="col-xs-3">
+          <label for="actualresult"></label>
+          <input type="text" name="actualresult" placeholder="enter the case actual result" [(ngModel)]="casestep.case_actual_result">
         </div>
       </div>
-      <div class="row" *ngFor='let step of casestep'>
+      <div class="row" *ngFor='let step of casestep.steps'>
         <div class="col-xs-5">
-          <select class="span3" [(ngModel)]="step.operate">
-                <option  *ngFor="let operate of operations" (click)='chooseOperation(operate,step)' [selected]="operate === step.operate" >{{operate}}</option>
+          <select class="span3" [(ngModel)]="step.action">
+                <option  *ngFor="let operate of operations" [selected]="operate === step.action" >{{operate}}</option>
               </select>
-          <label for="operatevalue" *ngIf='step.operate === "Input"'>{{step.operate}}:</label>
-          <input type="text" *ngIf='step.operate === "Input"'name="operatevalue" placeholder="enter the value" [(ngModel)]="step.operatevalue">
+          <label for="operatevalue" *ngIf='step.action === "Input"'>{{step.action}}:</label>
+          <input type="text" *ngIf='step.action === "Input"'name="operatevalue" placeholder="enter the value" [(ngModel)]="step.enterValue">
         </div>
 
         <div class="col-xs-5">
-          <select class="span3" [(ngModel)]="step.selector">
-                <option  *ngFor="let selector of selectors" [selected]="selector === step.selector" (click)='chooseSelector(selector)'>{{selector}}</option>
+          <select class="span3" [(ngModel)]="step.type">
+                <option  *ngFor="let selector of selectors" [selected]="selector === step.type">{{selector}}</option>
               </select>
-          <label for="selectorvalue">{{step.selector}}:</label>
-          <input type="text" name="selectorvalue" placeholder="enter the value" [(ngModel)]="step.selectorvalue">
+          <label for="selectorvalue">{{step.type}}:</label>
+          <input type="text" name="selectorvalue" placeholder="enter the value" [(ngModel)]="step.typePath">
         </div>
 
         <div class="col-xs-2">
