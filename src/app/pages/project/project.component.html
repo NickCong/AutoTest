@@ -5,31 +5,35 @@
 <input id="userid" type="text" name="user" placeholder="Please input the login user of your test website" [(ngModel)]="currentProject.user">
 <br />
 <label for="password">Password:</label>
-<input id="passwordid" type="text" name="password" placeholder="Please input the user's password of your test website" [(ngModel)]="currentProject.password">
+<input id="passwordid" type="password" name="password" placeholder="Please input the user's password of your test website" [(ngModel)]="currentProject.password">
 <br />
 <label for="project-name">Project Name:</label>
 <input id="projectnameid" type="text" name="project-name" placeholder="Please input the project name" [(ngModel)]="currentProject.project_name">
 <br />
 <label for="project-description">Project Description:</label>
-<input id="projectnameid" type="text" name="project-description" placeholder="Please input the project description" [(ngModel)]="currentProject.project_description">
+<input id="projectdescriptionid" type="text" name="project-description" placeholder="Please input the project description" [(ngModel)]="currentProject.project_description">
 <br />
 <button type="button" name="saveproject" id='saveprojectid' (click)='saveProject()'>Save Project</button>
 <button *ngIf='currentProjectId>0' type="button" id='createScenarioid' (click)='newScenario()'>New Scenario</button>
 <button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' (click)='exportScenario()'>Export Select Scenario</button>
+<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' (click)='exportAllScenario()'>Export All Scenario</button>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
 <div class="scenariolist" *ngIf='currentProjectId>0'>
-  <div *ngFor='let scenario of currentProject.scenarios'>
+  <div *ngFor='let scenario of currentProject.scenarios;let i = index' class="scenariodetail">
     <ul *ngIf='scenario'>
-      <li> <span>scenario_name:</span><span> {{scenario.scenario_name}} </span> </li>
-      <li> <span>scenario_description:</span> <span> {{scenario.scenario_description}} </span> </li>
+      <li> <span>Scenario Name:</span><span> {{scenario.scenario_name}} </span> </li>
+      <li> <span>Scenario Description:</span> <span> {{scenario.scenario_description}} </span> </li>
       <li *ngIf='scenario.scenario_url'>
-        <ul  *ngFor='let scenariostep of scenario.scenario_url;let i = index'>
-          <li> <span> action: </span> <span>  </span> </li>
-          <li> <span> value:  </span> <span>  </span> </li>
+        <ul  *ngFor='let scenariostep of scenario.scenario_url'>
+          Scenario Description:
+          <li> <span> action: </span> <span> scenariostep.action  </span> </li>
+          <li> <span> value:  </span> <span> scenariostep.enterValue  </span> </li>
+          <li> <span> type: </span> <span> scenariostep.type  </span> </li>
+          <li> <span> value:  </span> <span> scenariostep.typePath  </span> </li>
         </ul>
       </li>
       <li>
-        <button type="button" name="editscenario" id='editscenarioid' (click)='editScenario(i)'>Edit Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' (click)='editScenario(i+1)'>Edit Scenario</button>
       </li>
     </ul>
   </div>

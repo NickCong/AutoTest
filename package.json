@@ -12,7 +12,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^4.2.4",
+    "@angular/animations": "^4.4.6",
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
     "@angular/core": "^4.2.4",
@@ -21,10 +21,13 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
+    "angular4-files-upload": "^1.0.2",
     "bootstrap": "^3.3.7",
     "bootstrap-table": "^1.11.2",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
+    "primeng": "^5.0.0",
     "rxjs": "^5.4.2",
     "tableexport.jquery.plugin": "^1.9.5",
     "zone.js": "^0.8.14"

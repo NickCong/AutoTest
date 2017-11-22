@@ -14,6 +14,8 @@ import { StepComponent } from './pages/step/step.component';
 import { ProjectComponent } from './pages/project/project.component';
 import { ScenarioComponent } from './pages/scenario/scenario.component';
 import { AllProject } from './common/models/allproject.module';
+import { RunAutoTestService } from './common/services/runautotest.service';
+import {FileUploadModule} from 'primeng/primeng';
 
 @NgModule({
   declarations: [
@@ -32,9 +34,10 @@ import { AllProject } from './common/models/allproject.module';
     HttpClientModule,
     BrowserAnimationsModule,
     AppRouteModule,
+    FileUploadModule,
     AllProject
   ],
-  providers: [],
+  providers: [RunAutoTestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

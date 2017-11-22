@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectModule } from '../../common/models/project.module';
+import { RunAutoTestService } from '../../common/services/runautotest.service';
 import { AllProject } from '../../common/models/allproject.module';
 import { Router } from '@angular/router';
-import * as $ from 'jquery'
+import * as $ from 'jquery';
+import {FileUploadModule} from 'primeng/primeng';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +12,12 @@ import * as $ from 'jquery'
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  projects:ProjectModule[];
-  selectProjects:number[];
+  projects: ProjectModule[];
+  selectProjects: number[];
 
-  constructor(private router: Router, global: AllProject) {
-   this.projects = global.Projects;
-   this.selectProjects = [];
+  constructor(private router: Router, global: AllProject, private autotest: RunAutoTestService) {
+    this.projects = global.Projects;
+    this.selectProjects = [];
   }
 
   ngOnInit() {
@@ -34,6 +36,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/project', project.project_air_id]);
   }
 
+  myUploader(event) {
+    console.log(event.files[0])
+    this.projects=this.autotest.UploadFile(event.files[0]);
+  }
   selectProject(id: number): void {
     this.selectProjects.push(id);
   }
@@ -41,7 +47,7 @@ export class HomeComponent implements OnInit {
   exportSelectProject(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     let result: ProjectModule[];
-    for (let index = 0; index< this.selectProjects.length;index++) {
+    for (let index = 0; index < this.selectProjects.length; index++) {
       result.push(this.projects[index]);
     }
     var content = JSON.stringify(result);
@@ -52,5 +58,9 @@ export class HomeComponent implements OnInit {
     aLink.setAttribute('download', "TestCase.json");
     aLink.click();
     window.URL.revokeObjectURL(aLink.href);
+  }
+  runProject(): void {
+    var content = JSON.stringify(this.projects);
+    this.autotest.Run(this.projects);
   }
 }

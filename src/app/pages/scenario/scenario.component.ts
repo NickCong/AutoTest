@@ -25,7 +25,9 @@ export class ScenarioComponent implements OnInit {
   scenario: ScenarioModule;
   onecase: CaseModule;
   newsteporder: number;
-  constructor(private route: ActivatedRoute, global: AllProject) {
+  operations = ['Click', 'Input'];
+  selectors = ['ID', 'Name', 'Class', 'Text', 'Partial Link Text', 'Tag Name', 'X-Path', 'CSS Selector'];
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
     this.projects = global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
     this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
@@ -36,7 +38,7 @@ export class ScenarioComponent implements OnInit {
         scenario_id: this.currentScenarioId,
         scenario_name: '',
         scenario_description: '',
-        scenario_url: [],
+        scenario_url: [{ order: 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }],
         cases: [],
       };
     } else {
@@ -44,7 +46,7 @@ export class ScenarioComponent implements OnInit {
     }
     this.onecase = {
       case_name: '',
-      case_id: '',
+      case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
       case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }]
@@ -55,11 +57,21 @@ export class ScenarioComponent implements OnInit {
 
   }
 
+  addnew(): void {
+    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' })
+  }
+
+  removeCurrent(): void {
+    if (this.scenario.scenario_url.length > 1) {
+      this.scenario.scenario_url.pop();
+    }
+  }
   getNewCase(newCase): void {
+    newCase.case_id = this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1);
     this.scenario.cases.push(newCase);
     this.onecase = {
       case_name: '',
-      case_id: '',
+      case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
       case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }]
@@ -79,7 +91,7 @@ export class ScenarioComponent implements OnInit {
         "scenario_name": this.scenario.scenario_name,
         "scenario_description": this.scenario.scenario_description,
         "scenario_url": this.scenario.scenario_url,
-        "cases": []
+        "cases": this.scenario.cases
       }]
     }];
     var content = JSON.stringify(ressult);
@@ -92,6 +104,12 @@ export class ScenarioComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   saveScenario(): void {
-    this.project.scenarios.push(this.scenario);
+    if (this.scenario.scenario_id > this.project.scenarios.length) {
+      this.project.scenarios.push(this.scenario);
+    }
+    else{
+      this.project.scenarios[this.scenario.scenario_id-1]= this.scenario;
+    }
+    this.router.navigate(['/project', this.project.project_air_id]);
   }
 }

@@ -56,8 +56,16 @@ export class ProjectComponent implements OnInit {
 
   }
   editScenario(scenarioid): void {
-    alert(scenarioid);
     this.router.navigate(['/scenario', { projectid: this.newproject_air_id, scenarioid: scenarioid}]);
+  }
+  exportAllScenario(): void{
+    var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
+    var content = JSON.stringify([this.currentProject]);
+    var blob = new Blob([content]);
+    aLink.setAttribute('href', URL.createObjectURL(blob));
+    aLink.setAttribute('download', "TestCase.json");
+    aLink.click();
+    window.URL.revokeObjectURL(aLink.href);
   }
   exportScenario(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
@@ -73,6 +81,7 @@ export class ProjectComponent implements OnInit {
   }
   saveProject(): void {
     this.currentProject.project_air_id = this.newproject_air_id.toString();
+    this.currentProjectId = this.newproject_air_id;
     this.projects.push(this.currentProject);
   }
 }

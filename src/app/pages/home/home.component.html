@@ -4,22 +4,26 @@
     <span class="input-group-btn">
       <button class="btn btn-default" type="button">Go!</button>
     </span>
-  </div><!-- /input-group -->
+  </div>
+  <!-- /input-group -->
   <div class="btn-group" role="group" aria-label="...">
-  <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
-  <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
-</div>
-<a id='testcasefile' href="#" hidden="hidden" ></a>
+    <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
+    <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
+    <button type="button" class="btn btn-default run-project" (click)='runProject()'>Run Project</button>
+    <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
+  </div>
+  <a id='testcasefile' href="#" hidden="hidden"></a>
   <div class="row project" *ngFor='let project of projects'>
-       <span class="select-icon col-xs-1" (click)='selectProject(project.project_air_id)'>
-       </span>
-       <ul>
-         <li> <span>Base Url:</span><a href="project.base_url">{{project.base_url}}</a> </li>
-         <li> <span>Project Name:</span><span>{{project.project_name}}</span> </li>
-         <li> <span>Description:</span><span>{{project.project_description}}</span> </li>
-         <li> <span>Scenario Count:</span><span>{{project.scenarios.length}}</span> </li>
-       </ul>
-       <button class="edit" (click)='editProject(project)'>Edit</button>
-       <button class="view" (click)='viewProject(project)'>View</button>
+    <span (click)='selectProject(project.project_air_id)'>
+        <input type="radio" aria-label="...">
+    </span>
+    <ul>
+      <li> <span>Base Url:</span><a href="project.base_url">{{project.base_url}}</a> </li>
+      <li> <span>Project Name:</span><span>{{project.project_name}}</span> </li>
+      <li> <span>Description:</span><span>{{project.project_description}}</span> </li>
+      <li> <span>Scenario Count:</span><span>{{project.scenarios.length}}</span> </li>
+    </ul>
+    <button class="edit" (click)='editProject(project)'>Edit</button>
+    <button class="view" (click)='viewProject(project)'>View</button>
   </div>
 </div>

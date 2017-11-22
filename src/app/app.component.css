@@ -20,8 +20,5 @@
   padding: 30px;
 }
 .layout-foot{
-  position: absolute;
-  bottom: 30px;
-  width: 100%;
-  background-color: #ffffff
+  margin: 15px;
 }

@@ -4,3 +4,12 @@
 .input-group{
   margin-bottom: 30px;
 }
+.project{
+  margin: 15px;
+}
+.project ul{
+  padding-left: 0px
+}
+.project li{
+  list-style-type: none;
+}

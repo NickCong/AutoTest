@@ -1,9 +1,6 @@
 .modal-dialog{
   width:800px;
 }
-.modal-dialog input{
-  width: 100px;
-}
 .row{
   border:1px solid #e5e5e5;
   padding-top: 5px;

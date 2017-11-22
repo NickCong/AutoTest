@@ -1,0 +1,13 @@
+#rooturlid,#userid,#passwordid,#projectnameid,#projectdescriptionid{
+  width:300px;
+}
+.scenariodetail{
+  margin: 15px;
+}
+.scenariodetail ul{
+  margin-left: 0px;
+  padding-left: 10px;
+}
+.scenariodetail li{
+  list-style-type: none;
+}
