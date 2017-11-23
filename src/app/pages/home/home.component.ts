@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
 
   myUploader(event) {
     console.log(event.files[0])
-    this.projects=this.autotest.UploadFile(event.files[0]);
+      this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
   }
   selectProject(id: number): void {
     this.selectProjects.push(id);
