@@ -9,14 +9,15 @@ import 'rxjs/add/operator/map';
 export class RunAutoTestService {
   constructor(private http: Http, private httpclient: HttpClient) { }
   Run(project: ProjectModule[]): Promise<ProjectModule[]> {
+      let content = JSON.stringify(project);
     return this.http
-      .get(`http://localhost:52185/home/StartAutoTest?testcase=${project}`)
+      .get(`http://localhost:2752/home/StartAutoTest?testcase=${content}`)
       .toPromise()
-      .then(response => response.json().data as ProjectModule[]);
+      .then(response => response.json().data);
   }
   UploadFile(file): Promise<ProjectModule[]> {
-    const req = new HttpRequest('POST', 'http://localhost:52185/home/UploadFile', file);
-    let a=[];
+    const req = new HttpRequest('POST', 'http://localhost:2752/home/UploadFile', file);
+    let a = [];
     this.httpclient.request(req).subscribe(response => a = response['result'] as ProjectModule[]);
     return Promise.resolve(a);
   }

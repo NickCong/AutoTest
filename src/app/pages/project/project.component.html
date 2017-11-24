@@ -26,10 +26,10 @@
       <li *ngIf='scenario.scenario_url'>
         <ul  *ngFor='let scenariostep of scenario.scenario_url'>
           Scenario Description:
-          <li> <span> action: </span> <span> scenariostep.action  </span> </li>
-          <li> <span> value:  </span> <span> scenariostep.enterValue  </span> </li>
-          <li> <span> type: </span> <span> scenariostep.type  </span> </li>
-          <li> <span> value:  </span> <span> scenariostep.typePath  </span> </li>
+          <li> <span> action: </span> <span> {{scenariostep.action}} </span> </li>
+          <li> <span> value:  </span> <span> {{scenariostep.enterValue}}  </span> </li>
+          <li> <span> type: </span> <span> {{scenariostep.type}}  </span> </li>
+          <li> <span> value:  </span> <span> {{scenariostep.typePath}}  </span> </li>
         </ul>
       </li>
       <li>

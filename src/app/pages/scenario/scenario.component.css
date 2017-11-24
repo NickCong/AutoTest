@@ -5,5 +5,17 @@
   width: 400px;
 }
 .caseinfo{
+  margin: 15px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 15px;
+}
+.caseinfo ul{
   padding-left: 0px;
+  margin-top: 0;
+  margin-bottom: 0px;
+}
+.caseinfo li {
+  list-style-type: none;
 }

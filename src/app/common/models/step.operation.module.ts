@@ -1,1 +1,1 @@
-export const Operations = ['Click','Input','Assert'];
+export const Operations = ['Click','Input','Select','Assertion'];

@@ -4,7 +4,7 @@ import { RunAutoTestService } from '../../common/services/runautotest.service';
 import { AllProject } from '../../common/models/allproject.module';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
-import {FileUploadModule} from 'primeng/primeng';
+//import {FileUploadModule} from 'primeng/primeng';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
 
   myUploader(event) {
     console.log(event.files[0])
-      this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
+    this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
   }
   selectProject(id: number): void {
     this.selectProjects.push(id);
@@ -46,9 +46,10 @@ export class HomeComponent implements OnInit {
 
   exportSelectProject(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
-    let result: ProjectModule[];
+    let result = [];
     for (let index = 0; index < this.selectProjects.length; index++) {
-      result.push(this.projects[index]);
+      let temp = this.selectProjects[index]
+      result.push(this.projects[temp - 1]);
     }
     var content = JSON.stringify(result);
     var blob = new Blob([content]);
@@ -60,7 +61,7 @@ export class HomeComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   runProject(): void {
-    var content = JSON.stringify(this.projects);
-    this.autotest.Run(this.projects);
+    let content = JSON.stringify(this.projects);
+    this.autotest.Run(this.projects);  
   }
 }

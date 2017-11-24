@@ -10,7 +10,7 @@
     <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
     <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
     <button type="button" class="btn btn-default run-project" (click)='runProject()'>Run Project</button>
-    <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
+    <!--<p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>-->
   </div>
   <a id='testcasefile' href="#" hidden="hidden"></a>
   <div class="row project" *ngFor='let project of projects'>

@@ -82,6 +82,13 @@ export class ProjectComponent implements OnInit {
   saveProject(): void {
     this.currentProject.project_air_id = this.newproject_air_id.toString();
     this.currentProjectId = this.newproject_air_id;
-    this.projects.push(this.currentProject);
+    if (this.currentProjectId > this.projects.length) {
+      this.projects.push(this.currentProject);
+    }
+    else{
+      this.projects[this.currentProjectId-1]= this.currentProject;
+    }
+
+    this.router.navigate(['/home']);
   }
 }

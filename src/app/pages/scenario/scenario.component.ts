@@ -25,13 +25,12 @@ export class ScenarioComponent implements OnInit {
   scenario: ScenarioModule;
   onecase: CaseModule;
   newsteporder: number;
-  operations = ['Click', 'Input'];
-  selectors = ['ID', 'Name', 'Class', 'Text', 'Partial Link Text', 'Tag Name', 'X-Path', 'CSS Selector'];
+  operations = ['Click','Input','Select','Assertion'];
+  selectors = ['ID', 'Name', 'Class', 'Text', 'Partial Link Text', 'Tag Name', 'XPath', 'CSS Selector'];
   constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
     this.projects = global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
     this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
-    console.log(this.projects)
     this.project = this.projects[this.currentProjectId - 1];
     if (this.currentScenarioId > this.project.scenarios.length) {
       this.scenario = {

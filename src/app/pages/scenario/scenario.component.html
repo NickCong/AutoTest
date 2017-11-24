@@ -33,8 +33,8 @@
 <button type="button" id='export' (click)='exportTestCase()'>Export TestCase</button>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
 <div class="all-case" *ngIf='scenario.cases != undefined && scenario.cases != null'>
-    <div *ngFor='let case of scenario.cases'>
-          <ul *ngIf='case' class="caseinfo">
+    <div *ngFor='let case of scenario.cases' class="caseinfo">
+          <ul *ngIf='case'>
             Case {{case.case_id}}:<br />
             Case Name: {{case.case_name}}<br />
             Case Description: {{case.case_description}}<br />
