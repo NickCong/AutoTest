@@ -37,7 +37,7 @@ export class ScenarioComponent implements OnInit {
         scenario_id: this.currentScenarioId,
         scenario_name: '',
         scenario_description: '',
-        scenario_url: [{ order: 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }],
+        scenario_url: [{ order: 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }],
         cases: [],
       };
     } else {
@@ -48,7 +48,7 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
     };
   }
 
@@ -57,7 +57,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   addnew(): void {
-    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' })
+    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' })
   }
 
   removeCurrent(): void {
@@ -73,7 +73,7 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' }]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
     };
   }
   exportTestCase(): void {

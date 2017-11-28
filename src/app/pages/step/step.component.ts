@@ -20,7 +20,7 @@ export class StepComponent implements OnInit {
   }
 
   addnew(): void {
-    this.casestep.steps.push({ order: this.casestep.steps.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '' })
+    this.casestep.steps.push({ order: this.casestep.steps.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' })
   }
 
   removeCurrent(): void {

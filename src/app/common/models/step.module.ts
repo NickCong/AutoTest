@@ -4,4 +4,5 @@ export class StepModule {
   enterValue: string;
   type: string;
   typePath: string;
+  steps_result:string;
 }

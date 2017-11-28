@@ -12,12 +12,14 @@ import * as $ from 'jquery';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  projects: ProjectModule[];
+  projects: any[];
   selectProjects: number[];
+  files: any;
 
-  constructor(private router: Router, global: AllProject, private autotest: RunAutoTestService) {
+  constructor(private router: Router, private global: AllProject, private autotest: RunAutoTestService) {
     this.projects = global.Projects;
     this.selectProjects = [];
+    this.files = [];
   }
 
   ngOnInit() {
@@ -61,7 +63,13 @@ export class HomeComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   runProject(): void {
-    let content = JSON.stringify(this.projects);
-    this.autotest.Run(this.projects);  
+    this.autotest.Run(this.projects).then(result => {
+      if (result) {
+        alert('Success');
+      }
+    });
+  }
+  RefreshProject(): void {
+    this.autotest.GetTestResult().then(response => { this.projects = JSON.parse(response); this.global.Projects = JSON.parse(response); });
   }
 }
