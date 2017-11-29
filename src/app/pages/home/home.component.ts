@@ -38,10 +38,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/project', project.project_air_id]);
   }
 
-  myUploader(event) {
-    console.log(event.files[0])
-    this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
-  }
+  // myUploader(event) {
+  //   console.log(event.files[0])
+  //   this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
+  // }
   selectProject(id: number): void {
     this.selectProjects.push(id);
   }
@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   runProject(): void {
+    $("#UploadRow").addClass("hidden");
     this.autotest.Run(this.projects).then(result => {
       if (result) {
         alert('Success');
@@ -70,6 +71,19 @@ export class HomeComponent implements OnInit {
     });
   }
   RefreshProject(): void {
+    $("#UploadRow").addClass("hidden");
     this.autotest.GetTestResult().then(response => { this.projects = JSON.parse(response); this.global.Projects = JSON.parse(response); });
+  }
+  myUploader(event) {
+    if(event.files!=null){
+      $("#UploadRow").addClass("hidden");
+      // console.log('file666')
+      // console.log(event)
+    // this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);
+  }
+    //event.files == files to upload
+  }
+  UploadProject(){
+    $("#UploadRow").removeClass("hidden");
   }
 }

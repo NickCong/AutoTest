@@ -1,33 +1,50 @@
-<div class="home">
-  <div class="input-group">
-    <input type="text" class="form-control" placeholder="Search for project...">
-    <span class="input-group-btn">
-      <button class="btn btn-default" type="button">Go!</button>
-    </span>
-  </div>
-  <!-- /input-group -->
-  <div class="btn-group" role="group" aria-label="...">
-    <button type="button" class="btn btn-default new-project" (click)='newProject()'>Create Project</button>
-    <button type="button" class="btn btn-default export-project" (click)='exportSelectProject()'>Export select Project</button>
-<form class=""  method="myUploader(event)">
-  <input type="file" name="" value="">
-  <button type="button" name="button">Upload</button>
-</form>
-    <!--<input type="file" name="file" value="" (onchange)="myUploader(this)" [(ngModel)]='files'>-->
-    <button type="button" class="btn btn-default run-project" (click)='runProject()'>Run Project</button>
-    <button type="button" class="btn btn-default run-project" (click)='RefreshProject()'>Refresh Test Case</button>
-    <a id='testcasefile' href="#" hidden="hidden"></a>
-      <div class="row project" *ngFor='let project of projects'>
-        <span (click)='selectProject(project.project_air_id)'>
-          <input type="radio" aria-label="...">
-      </span>
-        <ul>
-          <li> <span>Base Url:</span><a href="project.base_url">{{project.base_url}}</a> </li>
-          <li> <span>Project Name:</span><span>{{project.project_name}}</span> </li>
-          <li> <span>Description:</span><span>{{project.project_description}}</span> </li>
-          <li> <span>Scenario Count:</span><span>{{project.scenarios.length}}</span> </li>
-        </ul>
-        <button class="edit" (click)='editProject(project)'>Edit</button>
-        <button class="view" (click)='viewProject(project)'>View</button>
+<div class="home col-xs-3">
+    <div class="row btnRow">
+        <button type="button" class="btn btn-default new-project btncss btn-primary" (click)='newProject()'>Create Project</button>
       </div>
+      <div class="row btnRow">
+        <button type="button" class="btn btn-default export-project btncss btn-primary" (click)='exportSelectProject()'>Export select Project</button>
+      </div>
+      <div class="row btnRow">
+        <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='runProject()'>Run Project</button>
+      </div>
+      <div class="row btnRow">
+        <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='RefreshProject()'>Refresh Test Case</button>
+      </div>
+      <div class="row btnRow">
+          <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='UploadProject()'>Upload file</button>
+        </div>
+</div>
+  <!-- /input-group -->
+  <div class="col-xs-9">
+      <div class="row hidden">
+          <input type="text" class="form-control" placeholder="Search for project...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">Go!</button>
+          </span>
+        </div>
+        <div class="row hidden UploadCssRow" id="UploadRow">
+            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
+         
+        </div>
+        <div class="row ContentRow">
+            <a id='testcasefile' href="#" hidden="hidden"></a>
+            <div class="project ViewListCss col-xs-6 caseinfo" *ngFor='let project of projects'>
+              <span (click)='selectProject(project.project_air_id)'>
+                    <input type="radio" aria-label="...">
+                </span>
+                <div class="row liRowCss">
+                    <ul>
+                        Base Url:<a href="project.base_url">{{project.base_url}}</a><br/>
+                        Project Name:<span>{{project.project_name}}</span> <br/>
+                        Description:<span>{{project.project_description}}</span><br/>
+                        Scenario Count:<span>{{project.scenarios.length}}</span><br/>
+                      </ul>
+                  </div>
+                  <div class="row liRowCss">
+                      <button class="btn btn-success" (click)='editProject(project)'>Edit</button>
+                      <button class="btn btn-info" (click)='viewProject(project)'>View</button>
+                  </div>
+            </div>
+        </div>
   </div>

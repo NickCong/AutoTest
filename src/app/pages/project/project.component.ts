@@ -90,5 +90,6 @@ export class ProjectComponent implements OnInit {
     }
 
     this.router.navigate(['/home']);
+    $("#UploadRow").removeClass("hidden");
   }
 }

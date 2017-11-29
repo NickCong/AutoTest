@@ -1,14 +1,9 @@
-#scenarionameid{
-  width: 200px;
-}
-#scenariodescriptionid{
-  width: 400px;
-}
+
 .caseinfo{
   margin: 15px;
   border: 1px solid #ffffff;
   border-radius: 10px;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   padding: 15px;
 }
 .caseinfo ul{
@@ -18,4 +13,35 @@
 }
 .caseinfo li {
   list-style-type: none;
+}
+.row{
+  padding: 0.5%;
+}
+.ViewListCss{
+  margin-top: 1%;
+  width: 30%;
+  margin-left: 1%;
+  background-color: beige;
+}
+.liRowCss{
+  /* float:right; */
+  margin-left: 0.1%;
+}
+.ContentRow{
+  width: 110%;
+  margin-left: -3%;
+  margin-top: -1%;
+  /* word-wrap:break-word; 
+  word-break:break-all;  */
+}
+.txtCss{
+  width: 100%;
+}
+.btnCss{
+  margin-left: 2%;
+  width: 13%;
+}
+.btnRowCss{
+  margin-left: -3%;
+  margin-top: 1%;
 }

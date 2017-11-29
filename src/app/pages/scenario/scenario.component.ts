@@ -25,8 +25,24 @@ export class ScenarioComponent implements OnInit {
   scenario: ScenarioModule;
   onecase: CaseModule;
   newsteporder: number;
-  operations = ['Click','Input','Select','Assertion'];
-  selectors = ['ID', 'Name', 'Class', 'Text', 'Partial Link Text', 'Tag Name', 'XPath', 'CSS Selector'];
+  operations =[
+    {label:'Select', value:null},
+    {label:'Click', value:{id:1, name: 'Click'}},
+    {label:'Input', value:{id:2, name: 'Input'}},
+    {label:'Dropdown', value:{id:3, name: 'Dropdown'}},
+    {label:'Assertion', value:{id:4, name: 'Assertion'}}
+];
+  selectors = [
+    {label:'Select', value:null},
+    {label:'ID', value:{id:1, name: 'ID'}},
+    {label:'Name', value:{id:2, name: 'Name'}},
+    {label:'Class', value:{id:3, name: 'Class'}},
+    {label:'Text', value:{id:3, name: 'Text'}},
+    {label:'Partial Link Text', value:{id:3, name: 'Partial Link Text'}},
+    {label:'Tag Name', value:{id:3, name: 'Tag Name'}},
+    {label:'XPath', value:{id:3, name: 'XPath'}},
+    {label:'CSS Selector', value:{id:3, name: 'CSS Selector'}}
+];
   constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
     this.projects = global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
@@ -37,7 +53,7 @@ export class ScenarioComponent implements OnInit {
         scenario_id: this.currentScenarioId,
         scenario_name: '',
         scenario_description: '',
-        scenario_url: [{ order: 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }],
+        scenario_url: [{ order: 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' }],
         cases: [],
       };
     } else {
@@ -48,7 +64,7 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' }]
     };
   }
 
@@ -57,7 +73,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   addnew(): void {
-    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' })
+    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' })
   }
 
   removeCurrent(): void {
@@ -73,7 +89,7 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'' ,textTag:''}]
     };
   }
   exportTestCase(): void {
@@ -110,5 +126,8 @@ export class ScenarioComponent implements OnInit {
       this.project.scenarios[this.scenario.scenario_id-1]= this.scenario;
     }
     this.router.navigate(['/project', this.project.project_air_id]);
+  }
+  createSep(){
+    this.router.navigate(['/Case',{projectid:this.project.project_air_id, scenarioid: this.scenario.scenario_id,caseid: this.scenario.cases.length+1 }]);
   }
 }

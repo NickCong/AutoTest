@@ -1,39 +1,58 @@
+<div class="row">
+    <div class="col-xs-3">
+        
+    </div>
+    <div class="col-xs-3">
 <label for="scenario-name">Scenario Name:</label>
-<input id="scenarionameid" type="text" name="scenario-name" placeholder="Please input the scenario name" [(ngModel)]="scenario.scenario_name">
-<br />
-<label for="scenario-description">Scenario Description:</label>
-<input id="scenariodescriptionid" type="text" name="scenario-description" placeholder="Please input the scenario description" [(ngModel)]="scenario.scenario_description">
-<br />
-<label for="scenario-step">Scenario Path:</label>
-<br />
-<div class="row" *ngFor='let step of scenario.scenario_url'>
-  <div class="col-xs-5">
-    <select class="span3" [(ngModel)]="step.action">
-          <option  *ngFor="let operate of operations" [selected]="operate === step.action" >{{operate}}</option>
-        </select>
-    <label for="operatevalue" *ngIf='step.action != "Click"'>{{step.action}}:</label>
-    <input type="text" *ngIf='step.action != "Click"' name="operatevalue" placeholder="enter the value" [(ngModel)]="step.enterValue">
-  </div>
+    </div>
+    <div class="col-xs-3">
+<input id="scenarionameid" type="text" name="scenario-name" class="form-control txtCss" placeholder="Please input the scenario name" [(ngModel)]="scenario.scenario_name">
 
-  <div class="col-xs-5">
-    <select class="span3" [(ngModel)]="step.type">
-          <option  *ngFor="let selector of selectors" [selected]="selector === step.type">{{selector}}</option>
-        </select>
-    <label for="selectorvalue">{{step.type}}:</label>
-    <input type="text" name="selectorvalue" placeholder="enter the value" [(ngModel)]="step.typePath">
-  </div>
-
-  <div class="col-xs-2">
-    <button type="button" name="button" (click)="addnew()">Add</button>
-    <button type="button" name="button" (click)="removeCurrent(step)">Remove</button>
-  </div>
+    </div>
+    <div class="col-xs-3">
+              
+    </div>
 </div>
-<button type="button" name="savescenario" id='savescenarioid' (click)='saveScenario()'>Save Scenario</button>
-<button type="button" name="createcase" data-toggle="modal" data-target="#myModal">New Test Case</button>
-<button type="button" id='export' (click)='exportTestCase()'>Export TestCase</button>
+<div class="row">
+    <div class="col-xs-3">
+        
+    </div>
+    <div class="col-xs-3">
+<label for="scenario-description">Scenario Description:</label>
+
+    </div>
+    <div class="col-xs-3">
+<input id="scenariodescriptionid" type="text" name="scenario-description" class="form-control txtCss" placeholder="Please input the scenario description" [(ngModel)]="scenario.scenario_description">
+
+    </div>
+    <div class="col-xs-3">
+              
+    </div>
+</div>
+<div class="row text-center btnRowCss">
+    <button type="button" name="savescenario" id='savescenarioid' class="btn btn-primary btnCss" (click)='saveScenario()'>Save Scenario</button>
+    <button type="button" name="createcase" data-toggle="modal" class="btn btn-primary btnCss" data-target="#myModal" (click)="createSep()">New Test Case</button>
+    <button type="button" id='export' class="btn btn-primary btnCss" (click)='exportTestCase()'>Export TestCase</button>
+</div>
+<div class="row">
+    <div class="col-xs-3">
+        
+    </div>
+    <div class="col-xs-3">
+          
+    </div>
+    <div class="col-xs-3">
+            
+    </div>
+    <div class="col-xs-3">
+              
+    </div>
+</div>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
-<div class="all-case" *ngIf='scenario.cases != undefined && scenario.cases != null'>
-    <div *ngFor='let case of scenario.cases' class="caseinfo">
+
+<div class="row ContentRow" *ngIf='scenario.cases != undefined && scenario.cases != null'>
+    <div *ngFor='let case of scenario.cases' class="caseinfo ViewListCss col-xs-3">
+        <div class="row liRowCss">
           <ul *ngIf='case'>
             Case {{case.case_id}}:<br />
             Case Name: {{case.case_name}}<br />
@@ -41,12 +60,13 @@
             Case Expected Result: {{case.case_expect_result}}<br />
             Case Actual Result: {{case.case_actual_result}}<br />
             <li *ngFor='let step of case.steps'>
-              <span>case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.enterValue}}:{{step.typePath}} on website</span>
+              <span>Case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.enterValue}}:{{step.typePath}} on website</span>
             </li>
           </ul>
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <case-step [casestep]='onecase' (case)="getNewCase($event)"></case-step>
-</div>
+</div> -->

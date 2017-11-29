@@ -1,40 +1,75 @@
-<label for="rooturl">WebSite Address:</label>
-<input id="rooturlid" type="text" name="rooturl" placeholder="Please input the root url of your test website" [(ngModel)]="currentProject.base_url">
-<br />
-<label for="user">User:</label>
-<input id="userid" type="text" name="user" placeholder="Please input the login user of your test website" [(ngModel)]="currentProject.user">
-<br />
-<label for="password">Password:</label>
-<input id="passwordid" type="password" name="password" placeholder="Please input the user's password of your test website" [(ngModel)]="currentProject.password">
-<br />
-<label for="project-name">Project Name:</label>
-<input id="projectnameid" type="text" name="project-name" placeholder="Please input the project name" [(ngModel)]="currentProject.project_name">
-<br />
-<label for="project-description">Project Description:</label>
-<input id="projectdescriptionid" type="text" name="project-description" placeholder="Please input the project description" [(ngModel)]="currentProject.project_description">
-<br />
-<button type="button" name="saveproject" id='saveprojectid' (click)='saveProject()'>Save Project</button>
-<button *ngIf='currentProjectId>0' type="button" id='createScenarioid' (click)='newScenario()'>New Scenario</button>
-<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' (click)='exportScenario()'>Export Select Scenario</button>
-<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' (click)='exportAllScenario()'>Export All Scenario</button>
-<a id='testcasefile' href="#" hidden="hidden" ></a>
-<div class="scenariolist" *ngIf='currentProjectId>0'>
-  <div *ngFor='let scenario of currentProject.scenarios;let i = index' class="scenariodetail">
-    <ul *ngIf='scenario'>
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3">
+    <label for="rooturl">WebSite Address:</label>
+  </div>
+  <div class="col-xs-3">
+    <input id="rooturlid" type="text" class="form-control" name="rooturl" placeholder="Please input the root url of your test website" [(ngModel)]="currentProject.base_url">
+  </div>
+<div class="col-xs-3"></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3">
+    <label for="user">User:</label>
+  </div>
+  <div class="col-xs-3">
+    <input id="userid" type="text" name="user" class="form-control" placeholder="Please input the login user of your test website" [(ngModel)]="currentProject.user">
+  </div>
+  <div class="col-xs-3"></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3">
+    <label for="password">Password:</label>
+  </div>
+  <div class="col-xs-3">
+    <input id="passwordid" type="password" name="password" class="form-control" placeholder="Please input the user's password of your test website"
+      [(ngModel)]="currentProject.password">
+  </div>
+  <div class="col-xs-3"></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3">
+    <label for="project-name">Project Name:</label>
+  </div>
+  <div class="col-xs-3">
+    <input id="projectnameid" type="text" name="project-name" class="form-control" placeholder="Please input the project name" [(ngModel)]="currentProject.project_name">
+  </div>
+  <div class="col-xs-3"></div>
+</div>
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3">
+    <label for="project-description">Project Description:</label>
+  </div>
+  <div class="col-xs-3">
+    <input id="projectdescriptionid" type="text" name="project-description" class="form-control" placeholder="Please input the project description"
+      [(ngModel)]="currentProject.project_description">
+  </div>
+  <div class="col-xs-3"></div>
+</div>
+<div class="row text-center btnRowCss">
+<button type="button" name="saveproject" id='saveprojectid' class="btn btn-primary btnCss" (click)='saveProject()'>Save Project</button>
+<button *ngIf='currentProjectId>0' type="button" id='createScenarioid' class="btn btn-primary btnCss" (click)='newScenario()'>New Scenario</button>
+<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' class="btn btn-primary btnCss" (click)='exportScenario()'>Export Select Scenario</button>
+<button *ngIf='currentProjectId>0' type="button" id='exportScenarioid' class="btn btn-primary btnCss" (click)='exportAllScenario()'>Export All Scenario</button>
+</div>
+
+<a id='testcasefile' href="#" hidden="hidden"></a>
+<div class="row ContentRow" *ngIf='currentProjectId>0'>
+  <div *ngFor='let scenario of currentProject.scenarios;let i = index' class="scenariodetail ViewListCss col-xs-6 caseinfo">
+    <ul *ngIf='scenario' class="ulCss">
+        <div class="row liRowCss">
       <li> <span>Scenario Name:</span><span> {{scenario.scenario_name}} </span> </li>
       <li> <span>Scenario Description:</span> <span> {{scenario.scenario_description}} </span> </li>
-      <li *ngIf='scenario.scenario_url'>
-        <ul  *ngFor='let scenariostep of scenario.scenario_url'>
-          Scenario Description:
-          <li> <span> action: </span> <span> {{scenariostep.action}} </span> </li>
-          <li> <span> value:  </span> <span> {{scenariostep.enterValue}}  </span> </li>
-          <li> <span> type: </span> <span> {{scenariostep.type}}  </span> </li>
-          <li> <span> value:  </span> <span> {{scenariostep.typePath}}  </span> </li>
-        </ul>
-      </li>
+    </div>
+    <div class="row liRowCss">
       <li>
-        <button type="button" name="editscenario" id='editscenarioid' (click)='editScenario(i+1)'>Edit Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editScenario(i+1)'>Edit Scenario</button>
       </li>
+    </div>
     </ul>
   </div>
 </div>

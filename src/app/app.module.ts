@@ -15,7 +15,8 @@ import { ScenarioComponent } from './pages/scenario/scenario.component';
 import { AllProject } from './common/models/allproject.module';
 import { RunAutoTestService } from './common/services/runautotest.service';
 //import {FileUploadModule} from 'primeng/primeng';
-
+import {DropdownModule} from 'primeng/primeng';
+import {FileUploadModule} from 'primeng/primeng';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,8 +34,9 @@ import { RunAutoTestService } from './common/services/runautotest.service';
     HttpClientModule,
     BrowserAnimationsModule,
     AppRouteModule,
-  //  FileUploadModule,
-    AllProject
+    FileUploadModule,
+    AllProject,
+    DropdownModule
 
   ],
   providers: [RunAutoTestService],
