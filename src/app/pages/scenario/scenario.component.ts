@@ -7,6 +7,7 @@ import { ScenarioModule } from '../../common/models/scenario.module';
 import { CaseModule } from '../../common/models/case.module';
 import { ProjectModule } from '../../common/models/project.module';
 import { AllProject } from '../../common/models/allproject.module';
+import { RunAutoTestService } from '../../common/services/runautotest.service';
 import 'rxjs/add/operator/switchMap';
 import * as $ from 'jquery'
 
@@ -43,7 +44,7 @@ export class ScenarioComponent implements OnInit {
     {label:'XPath', value:{id:3, name: 'XPath'}},
     {label:'CSS Selector', value:{id:3, name: 'CSS Selector'}}
 ];
-  constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject, private autotest: RunAutoTestService) {
     this.projects = global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
     this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
@@ -91,6 +92,22 @@ export class ScenarioComponent implements OnInit {
       case_expect_result: '',
       case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'' ,textTag:''}]
     };
+  }
+
+  editCase(i: number): void {
+    this.router.navigate(['/Case',{projectid:this.project.project_air_id, scenarioid: this.scenario.scenario_id,caseid:i}]);
+  }
+  runCase(i: number): void {
+    let runproject = this.project;
+    let runscenario = this.scenario;
+    let runcase = this.scenario.cases[i];
+    runscenario.cases= [runcase];
+    runproject.scenarios = [runscenario];
+    this.autotest.Run([runproject]).then(result => {
+      if (result) {
+        alert('AutoTest Finished!');
+      }
+    });
   }
   exportTestCase(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");

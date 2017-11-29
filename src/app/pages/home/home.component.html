@@ -6,7 +6,7 @@
         <button type="button" class="btn btn-default export-project btncss btn-primary" (click)='exportSelectProject()'>Export select Project</button>
       </div>
       <div class="row btnRow">
-        <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='runProject()'>Run Project</button>
+        <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='runSelectProject()'>Run select Project</button>
       </div>
       <div class="row btnRow">
         <button type="button" class="btn btn-default run-project btncss btn-primary" (click)='RefreshProject()'>Refresh Test Case</button>
@@ -25,13 +25,13 @@
         </div>
         <div class="row hidden UploadCssRow" id="UploadRow">
             <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
-         
+
         </div>
         <div class="row ContentRow">
             <a id='testcasefile' href="#" hidden="hidden"></a>
             <div class="project ViewListCss col-xs-6 caseinfo" *ngFor='let project of projects'>
-              <span (click)='selectProject(project.project_air_id)'>
-                    <input type="radio" aria-label="...">
+              <span>
+                    <input type="checkbox" aria-label="...">
                 </span>
                 <div class="row liRowCss">
                     <ul>
@@ -44,6 +44,7 @@
                   <div class="row liRowCss">
                       <button class="btn btn-success" (click)='editProject(project)'>Edit</button>
                       <button class="btn btn-info" (click)='viewProject(project)'>View</button>
+                      <button class="btn btn-fail" (click)='removeProject(project)'>Delete</button>
                   </div>
             </div>
         </div>

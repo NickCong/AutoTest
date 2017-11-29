@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-3">
-        
+
     </div>
     <div class="col-xs-3">
 <label for="scenario-name">Scenario Name:</label>
@@ -10,12 +10,12 @@
 
     </div>
     <div class="col-xs-3">
-              
+
     </div>
 </div>
 <div class="row">
     <div class="col-xs-3">
-        
+
     </div>
     <div class="col-xs-3">
 <label for="scenario-description">Scenario Description:</label>
@@ -26,7 +26,7 @@
 
     </div>
     <div class="col-xs-3">
-              
+
     </div>
 </div>
 <div class="row text-center btnRowCss">
@@ -36,22 +36,22 @@
 </div>
 <div class="row">
     <div class="col-xs-3">
-        
+
     </div>
     <div class="col-xs-3">
-          
+
     </div>
     <div class="col-xs-3">
-            
+
     </div>
     <div class="col-xs-3">
-              
+
     </div>
 </div>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
 
 <div class="row ContentRow" *ngIf='scenario.cases != undefined && scenario.cases != null'>
-    <div *ngFor='let case of scenario.cases' class="caseinfo ViewListCss col-xs-3">
+    <div *ngFor='let case of scenario.cases;let i = index' class="caseinfo ViewListCss col-xs-3">
         <div class="row liRowCss">
           <ul *ngIf='case'>
             Case {{case.case_id}}:<br />
@@ -60,8 +60,10 @@
             Case Expected Result: {{case.case_expect_result}}<br />
             Case Actual Result: {{case.case_actual_result}}<br />
             <li *ngFor='let step of case.steps'>
-              <span>Case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.enterValue}}:{{step.typePath}} on website</span>
+              <span>Case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.type}}:{{step.typePath}} on website.This step result:{{step.steps_result}}</span>
             </li>
+            <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editCase(i)'>Edit Case</button>
+            <button type="button" name="editscenario" id='editscenarioid' class="btn btn-info" (click)='runCase(i)'>Run Case</button>
           </ul>
         </div>
     </div>

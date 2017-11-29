@@ -62,12 +62,14 @@
   <div *ngFor='let scenario of currentProject.scenarios;let i = index' class="scenariodetail ViewListCss col-xs-6 caseinfo">
     <ul *ngIf='scenario' class="ulCss">
         <div class="row liRowCss">
+      <li><input type="checkbox" aria-label="..."></li>
       <li> <span>Scenario Name:</span><span> {{scenario.scenario_name}} </span> </li>
       <li> <span>Scenario Description:</span> <span> {{scenario.scenario_description}} </span> </li>
     </div>
     <div class="row liRowCss">
       <li>
         <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editScenario(i+1)'>Edit Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-info" (click)='runScenario(i)'>Run Scenario</button>
       </li>
     </div>
     </ul>

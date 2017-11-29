@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { ScenarioModule } from '../../common/models/scenario.module';
 import { ProjectModule } from '../../common/models/project.module';
 import { AllProject } from '../../common/models/allproject.module';
+import { RunAutoTestService } from '../../common/services/runautotest.service';
 import 'rxjs/add/operator/switchMap';
 import * as $ from 'jquery'
 
@@ -21,10 +22,10 @@ export class ProjectComponent implements OnInit {
   currentProjectId: number;
   currentProject: ProjectModule;
   scenario: ScenarioModule;
-  projects:ProjectModule[];
+  projects: ProjectModule[];
   newproject_air_id: number;
   newscenarioid: number;
-  constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject, private autotest: RunAutoTestService) {
     this.projects = global.Projects;
     this.route.paramMap
       .switchMap((params: ParamMap) => params.getAll('id'))
@@ -56,9 +57,19 @@ export class ProjectComponent implements OnInit {
 
   }
   editScenario(scenarioid): void {
-    this.router.navigate(['/scenario', { projectid: this.newproject_air_id, scenarioid: scenarioid}]);
+    this.router.navigate(['/scenario', { projectid: this.newproject_air_id, scenarioid: scenarioid }]);
   }
-  exportAllScenario(): void{
+  runScenario(scenarioindex): void {
+    let result = this.currentProject;
+    let runscenario = this.currentProject.scenarios[scenarioindex];
+    result.scenarios = [runscenario];
+    this.autotest.Run([result]).then(result => {
+      if (result) {
+        alert('AutoTest Finished!');
+      }
+    });
+  }
+  exportAllScenario(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     var content = JSON.stringify([this.currentProject]);
     var blob = new Blob([content]);
@@ -69,7 +80,16 @@ export class ProjectComponent implements OnInit {
   }
   exportScenario(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
-    var content = JSON.stringify([this.currentProject]);
+    let selectedscenarios = [];
+    let self = this;
+    let selectedproject =this.currentProject;
+    $('.scenariodetail.ViewListCss.col-xs-6.caseinfo input').each(function(index, ele) {
+      if ((<HTMLInputElement>ele).checked) {
+        selectedscenarios.push(self.currentProject.scenarios[index]);
+      }
+    });
+    selectedproject.scenarios= selectedscenarios;
+    var content = JSON.stringify([selectedproject]);
     var blob = new Blob([content]);
     aLink.setAttribute('href', URL.createObjectURL(blob));
     aLink.setAttribute('download', "TestCase.json");
@@ -85,8 +105,8 @@ export class ProjectComponent implements OnInit {
     if (this.currentProjectId > this.projects.length) {
       this.projects.push(this.currentProject);
     }
-    else{
-      this.projects[this.currentProjectId-1]= this.currentProject;
+    else {
+      this.projects[this.currentProjectId - 1] = this.currentProject;
     }
 
     this.router.navigate(['/home']);

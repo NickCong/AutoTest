@@ -37,22 +37,27 @@ export class HomeComponent implements OnInit {
   viewProject(project: ProjectModule, IsView: number): void {
     this.router.navigate(['/project', project.project_air_id]);
   }
-
-  // myUploader(event) {
-  //   console.log(event.files[0])
-  //   this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
-  // }
-  selectProject(id: number): void {
-    this.selectProjects.push(id);
+  removeProject(project: ProjectModule): void {
+    let newprojects = [];
+    for (let i = 0; i < this.projects.length; i++) {
+      if (this.projects[i].project_air_id != project.project_air_id) {
+        newprojects.push(this.projects[i]);
+      }
+    }
+    this.projects = newprojects;
+    this.global.Projects = this.projects;
   }
 
   exportSelectProject(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     let result = [];
-    for (let index = 0; index < this.selectProjects.length; index++) {
-      let temp = this.selectProjects[index]
-      result.push(this.projects[temp - 1]);
-    }
+    let self = this;
+    $('.project.ViewListCss.col-xs-6.caseinfo input').each(function(index, ele) {
+      if ((<HTMLInputElement>ele).checked) {
+        result.push(self.projects[index])
+      }
+    });
+
     var content = JSON.stringify(result);
     var blob = new Blob([content]);
     //aLink.download = "TestCase.json";
@@ -62,11 +67,18 @@ export class HomeComponent implements OnInit {
     aLink.click();
     window.URL.revokeObjectURL(aLink.href);
   }
-  runProject(): void {
+  runSelectProject(): void {
     $("#UploadRow").addClass("hidden");
-    this.autotest.Run(this.projects).then(result => {
+    let result = [];
+    let self = this;
+    $('.project.ViewListCss.col-xs-6.caseinfo input').each(function(index, ele) {
+      if ((<HTMLInputElement>ele).checked) {
+        result.push(self.projects[index])
+      }
+    });
+    this.autotest.Run(result).then(result => {
       if (result) {
-        alert('Success');
+        alert('AutoTest Finished!');
       }
     });
   }
@@ -75,15 +87,18 @@ export class HomeComponent implements OnInit {
     this.autotest.GetTestResult().then(response => { this.projects = JSON.parse(response); this.global.Projects = JSON.parse(response); });
   }
   myUploader(event) {
-    if(event.files!=null){
+    if (event.files != null) {
       $("#UploadRow").addClass("hidden");
-      // console.log('file666')
-      // console.log(event)
-    // this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);
-  }
+      let self = this;
+      this.autotest.UploadFile(event.files[0]).then(function(response) {
+        self.projects = JSON.parse(response);
+        self.global.Projects = JSON.parse(response);
+      })
+    };
+
     //event.files == files to upload
   }
-  UploadProject(){
+  UploadProject() {
     $("#UploadRow").removeClass("hidden");
   }
 }
