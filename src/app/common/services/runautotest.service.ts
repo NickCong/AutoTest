@@ -12,7 +12,23 @@ export class RunAutoTestService {
   Run(project: ProjectModule[]): Promise<string> {
     let content = JSON.stringify(project);
     return this.http
-      .post(`http://localhost:52185/home/StartAutoTest`, { testcase: content }, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartAutoTest`, { testcase: content }, { headers: this.headers })
+      .toPromise()
+      .then(response => response.json());
+    /*let content = JSON.stringify(project);
+    return this.http
+    .post(`http://localhost:2752/home/StartAutoTest`, content ,{headers: this.headers})
+    .toPromise()
+    .then(response => response.json());*/
+    /*const req = new HttpRequest('POST', 'http://localhost:2752/home/StartAutoTest', project);
+    let a = [];
+    this.httpclient.request(req).subscribe(response => a = response['result']);
+    return Promise.resolve(a);*/
+  }
+  RunPhantomjs(project: ProjectModule[]): Promise<string> {
+    let content = JSON.stringify(project);
+    return this.http
+      .post(`http://localhost:2752/home/StartPhantomAutoTest`, { testcase: content }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
     /*let content = JSON.stringify(project);
@@ -33,13 +49,13 @@ export class RunAutoTestService {
     this.httpclient.request(req).subscribe(response =>  a = response['result']);
     return a;*/
     return this.http
-    .post(`http://localhost:52185/home/UploadFile`, fd)
+    .post(`http://localhost:2752/home/UploadFile`, fd)
     .toPromise()
     .then(response => response.json())
   }
   GetTestResult(): Promise<string> {
     return this.http
-      .get(`http://localhost:52185/home/SycActualResult`)
+      .get(`http://localhost:2752/home/SycActualResult`)
       .toPromise()
       .then(response => response.json());
   }

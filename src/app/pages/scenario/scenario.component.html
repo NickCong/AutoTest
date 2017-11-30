@@ -34,20 +34,7 @@
     <button type="button" name="createcase" data-toggle="modal" class="btn btn-primary btnCss" data-target="#myModal" (click)="createSep()">New Test Case</button>
     <button type="button" id='export' class="btn btn-primary btnCss" (click)='exportTestCase()'>Export TestCase</button>
 </div>
-<div class="row">
-    <div class="col-xs-3">
 
-    </div>
-    <div class="col-xs-3">
-
-    </div>
-    <div class="col-xs-3">
-
-    </div>
-    <div class="col-xs-3">
-
-    </div>
-</div>
 <a id='testcasefile' href="#" hidden="hidden" ></a>
 
 <div class="row ContentRow" *ngIf='scenario.cases != undefined && scenario.cases != null'>
@@ -62,7 +49,7 @@
             <li *ngFor='let step of case.steps'>
               <span>Case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.type}}:{{step.typePath}} on website.This step result:{{step.steps_result}}</span>
             </li>
-            <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editCase(i)'>Edit Case</button>
+            <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editCase(i+1)'>Edit Case</button>
             <button type="button" name="editscenario" id='editscenarioid' class="btn btn-info" (click)='runCase(i)'>Run Case</button>
           </ul>
         </div>

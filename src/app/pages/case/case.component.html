@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-xs-2">
+      <label for="casename">Case Name:</label>
+    </div>
+    <div class="col-xs-4">
+      <input type="text" name="casename" class="form-control " placeholder="enter the case name" [(ngModel)]="onecase.case_name">
+    </div>
+    <div class="col-xs-2">
+      <label for="casedescription">Case Description:</label>
+    </div>
+    <div class="col-xs-4">
+      <input type="text" name="casedescription" class="form-control " placeholder="enter the case description" [(ngModel)]="onecase.case_description">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2">
+      <label for="expectionresult">Expected Result:</label>
+    </div>
+    <div class="col-xs-4">
+      <input type="text" name="expectionresult" class="form-control " placeholder="enter the expection result" [(ngModel)]="onecase.case_expect_result">
+    </div>
+    <div class="col-xs-2">
+      <label for="actualresult">Actual Result:</label>
+    </div>
+    <div class="col-xs-4">
+      <input type="text" name="actualresult" class="form-control" placeholder="enter the case actual result" [(ngModel)]="onecase.case_actual_result">
+    </div>
+  </div>
+  <div class="row text-center">
+      <button (click)='createcase()' class="btn btn-primary">Save Case</button>
+      <button (click)="showStepDialog()" *ngIf='addStep==1' class="btn btn-success">Add Step</button>
+  </div>
+  <div class="row ContentRow" *ngIf='onecase.steps'>
+      <div *ngFor='let step of onecase.steps;let i = index' class="caseinfo ViewListCss col-xs-3">
+          <div class="row liRowCss">
+            <ul *ngIf='step'>
+              Step ID {{step.order}}:<br />
+              Step Action: {{step.action}}<br />
+              Step wait: {{step.wait}}<br />
+              Step Enter Value: {{step.enterValue}}<br />
+              Step Type: {{step.type}}<br />
+              Step Type Path: {{step.typePath}}<br />
+              Step Result: {{step.steps_result}}<br />
+              Step Text Tag: {{step.textTag}}<br />
+              <!-- <li *ngFor='let step of case.steps'>
+                <span>Case step {{step.order}}: Please {{step.action}}{{step.enterValue}} the element of {{step.type}}:{{step.typePath}} on website.This step result:{{step.steps_result}}</span>
+              </li> -->
+              <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editStep(i+1)'>Edit</button>
+              <!-- <button type="button" name="editscenario" id='editscenarioid' class="btn btn-warning" (click)='removeStep(i)'>Remove</button> -->
+            </ul>
+          </div>
+      </div>
+  </div>
+  <p-dialog header="Title" [(visible)]="Stepdisplay" modal="modal" [minWidth]="300" [responsive]="true">
+     <app-step [Dropdowns]="Dropdowns" [StepM]="stepM" [StepID]="StepID" [Stepid]="Stepid"(Step)="getStep($event)" (Stepdisplay)="getdisplay($event)"></app-step>
+    
+  </p-dialog>

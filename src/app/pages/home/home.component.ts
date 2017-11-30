@@ -4,6 +4,7 @@ import { RunAutoTestService } from '../../common/services/runautotest.service';
 import { AllProject } from '../../common/models/allproject.module';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
+import {ConfirmDialogModule,ConfirmationService} from 'primeng/primeng';
 //import {FileUploadModule} from 'primeng/primeng';
 
 @Component({
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   selectProjects: number[];
   files: any;
 
-  constructor(private router: Router, private global: AllProject, private autotest: RunAutoTestService) {
+  constructor(private router: Router, private global: AllProject, private autotest: RunAutoTestService,private confirmationService: ConfirmationService) {
     this.projects = global.Projects;
     this.selectProjects = [];
     this.files = [];
@@ -78,7 +79,13 @@ export class HomeComponent implements OnInit {
     });
     this.autotest.Run(result).then(result => {
       if (result) {
-        alert('AutoTest Finished!');
+        //alert('AutoTest Finished!');
+        this.confirmationService.confirm({
+            message: 'Are you sure that you want to update the project test result?',
+            accept: () => {
+                self.RefreshProject();
+            }
+        });
       }
     });
   }

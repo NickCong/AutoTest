@@ -1,75 +1,57 @@
-
-      <div class="row">
-        <div class="col-xs-3">
-          <label for="casename">Case Name:</label>
+  <div class="row">
+    <div class="col-xs-4">
+      <label>Action:</label>
+    </div>
+    <div class="col-xs-8">
+      <p-dropdown [options]="operations" [style]="{'width':'100%'}" placeholder="Select a type" [(ngModel)]="Selname3" autoWidth="false"></p-dropdown>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-xs-4">
+        <label *ngIf='StepM.action != "Click"'>EnterValue:</label>
+      </div>
+      <div class="col-xs-8">
+        <input type="text" *ngIf='StepM.action != "Click"' name="operatevalue" class="form-control" placeholder="enter the value" [(ngModel)]="StepM.enterValue">
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+          <label>Wait:</label>
         </div>
-        <div class="col-xs-3">
-            <input type="text" name="casename" class="form-control " placeholder="enter the case name" [(ngModel)]="onecase.case_name">
-        </div>
-        <div class="col-xs-3">
-          <label for="casedescription">Case Description:</label>
-          </div>
-        <div class="col-xs-3">
-          <input type="text" name="casedescription"  class="form-control " placeholder="enter the case description" [(ngModel)]="onecase.case_description">
+        <div class="col-xs-8">
+          <input type="text" name="Waitvalue" placeholder="Wait..." class="form-control" [(ngModel)]="StepM.wait">
         </div>
       </div>
-      <div class="col-xs-3">
-        </div>
-      <div class="row">
-          <div class="col-xs-3">
-          <label for="expectionresult">Expected Result:</label>
-           </div>
-        <div class="col-xs-3">
-          <input type="text" name="expectionresult"  class="form-control " placeholder="enter the expection result" [(ngModel)]="onecase.case_expect_result">
-        </div>
-        <div class="col-xs-3">
-            <label for="actualresult">Actual Result:</label>
-          </div>
-        <div class="col-xs-3">
-          <input type="text" name="actualresult"  class="form-control" placeholder="enter the case actual result" [(ngModel)]="onecase.case_actual_result">
-        </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <label>Type:</label>
+    </div>
+    <div class="col-xs-8">
+      <p-dropdown #dd [options]="selectItem" placeholder="Select a type" [style]="{'width':'100%'}" autoWidth="false" [(ngModel)]="Selname" (onChange)="Selectonchange(dd)"></p-dropdown>
+    </div>
+  </div>
+ 
+    <div class="row">
+    <div class="col-xs-4">
+      <label>EnterValue:</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" name="selectorvalue" placeholder="enter the value" class="form-control" [(ngModel)]="StepM.typePath">
+    </div>
+  </div>
+    <div class="row">
+    <div class="col-xs-4">
+      <div *ngIf="selectedItem2">
+        <label>Tag:</label>
       </div>
-      <div class="row">
-          <div class="col-xs-6">
-            <button (click)='createcase()'>Save Case</button>
-          </div>
-          <div class="col-xs-6">
-            
-          </div>
-        </div>
-
-      <div class="row" *ngFor='let step of onecase.steps'>
-        <div class="col-xs-5">
-          <div class="row">
-              <p-dropdown [options]="Operations" [(ngModel)]="step.action" placeholder="Select"></p-dropdown>
-          </div>
-          <div class="row">
-              <label for="operatevalue" *ngIf='step.action != "Click"'>{{step.action}}:</label>
-              <input type="text" *ngIf='step.action != "Click"' name="operatevalue" placeholder="enter the value" [(ngModel)]="step.enterValue">
-          </div>
-          <!-- <select class="span3" [(ngModel)]="step.action">
-                <option  *ngFor="let operate of operations" [selected]="operate === step.action" >{{operate}}</option>
-              </select> -->
-        </div>
-        <div class="col-xs-5">
-            <div class="row">
-                <p-dropdown [options]="selectItem" [(ngModel)]="step.type" placeholder="Select" (onChange)="Selectonchange()"></p-dropdown>
-            </div>
-            <div class="row">
-                <div *ngIf="selectedItem2">
-                    <p-dropdown [options]="selectedItem2" [(ngModel)]="Selname2" placeholder="Select"></p-dropdown>
-                  </div>
-              </div>
-              <div class="row">
-                  <label for="selectorvalue">{{step.type}}:</label>
-                  <input type="text" name="selectorvalue" placeholder="enter the value" [(ngModel)]="step.typePath">
-              </div>
-        </div>
-
-        <div class="col-xs-2">
-          <button type="button" name="button" class="btn btn-success" (click)="addnew()">Create</button>
-          <button type="button" name="button" class="btn btn btn-warning" (click)="removeCurrent(step)">Remove</button>
-        </div>
+    </div>
+    <div class="col-xs-8">
+      <div *ngIf="selectedItem2">
+        <p-dropdown [options]="selectedItem2" [style]="{'width':'100%'}" [(ngModel)]="Selname2" placeholder="Select a tag"></p-dropdown>
       </div>
-
-
+    </div>
+  </div>
+  <div class="row">
+      <button type="button" class="btn btn-success" (click)="addnew()">Save</button>
+      <button type="button" class="btn btn-warning" (click)="closeStep()">Cancel</button>
+    </div>

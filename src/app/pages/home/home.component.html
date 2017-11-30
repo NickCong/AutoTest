@@ -27,6 +27,12 @@
             <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)"></p-fileUpload>
 
         </div>
+        <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" #cd>
+            <p-footer>
+              <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+              <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"></button>
+            </p-footer>
+          </p-confirmDialog>
         <div class="row ContentRow">
             <a id='testcasefile' href="#" hidden="hidden"></a>
             <div class="project ViewListCss col-xs-6 caseinfo" *ngFor='let project of projects'>
@@ -44,7 +50,7 @@
                   <div class="row liRowCss">
                       <button class="btn btn-success" (click)='editProject(project)'>Edit</button>
                       <button class="btn btn-info" (click)='viewProject(project)'>View</button>
-                      <button class="btn btn-fail" (click)='removeProject(project)'>Delete</button>
+                      <button class="btn btn-warning" (click)='removeProject(project)'>Delete</button>
                   </div>
             </div>
         </div>

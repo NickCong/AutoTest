@@ -8,6 +8,7 @@ import { CaseModule } from '../../common/models/case.module';
 import { ProjectModule } from '../../common/models/project.module';
 import { AllProject } from '../../common/models/allproject.module';
 import { RunAutoTestService } from '../../common/services/runautotest.service';
+import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 import 'rxjs/add/operator/switchMap';
 import * as $ from 'jquery'
 
@@ -44,8 +45,8 @@ export class ScenarioComponent implements OnInit {
     {label:'XPath', value:{id:3, name: 'XPath'}},
     {label:'CSS Selector', value:{id:3, name: 'CSS Selector'}}
 ];
-  constructor(private router: Router, private route: ActivatedRoute, global: AllProject, private autotest: RunAutoTestService) {
-    this.projects = global.Projects;
+  constructor(private router: Router, private route: ActivatedRoute, private global: AllProject, private autotest: RunAutoTestService, private confirmationService: ConfirmationService) {
+    this.projects = this.global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
     this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
     this.project = this.projects[this.currentProjectId - 1];
@@ -98,15 +99,61 @@ export class ScenarioComponent implements OnInit {
     this.router.navigate(['/Case',{projectid:this.project.project_air_id, scenarioid: this.scenario.scenario_id,caseid:i}]);
   }
   runCase(i: number): void {
-    let runproject = this.project;
-    let runscenario = this.scenario;
+    let runproject = {
+      base_url: this.project.base_url, user: this.project.user, password: this.project.password,
+      project_name: this.project.project_name,
+      project_air_id: this.project.project_air_id,
+      project_description: this.project.project_description,
+      scenarios: []
+    };
+    let runscenario = {
+      scenario_id: this.scenario.scenario_id,
+      scenario_name: this.scenario.scenario_name,
+      scenario_description: this.scenario.scenario_description,
+      scenario_url: [],
+      cases: [],
+    };
     let runcase = this.scenario.cases[i];
-    runscenario.cases= [runcase];
+    let self = this;
+    runscenario.cases = [runcase];
     runproject.scenarios = [runscenario];
-    this.autotest.Run([runproject]).then(result => {
-      if (result) {
-        alert('AutoTest Finished!');
+    let needdownload = false;
+    for (let j = 0; j < runcase.steps.length; j++) {
+      if (runcase.steps[j].action == 'Download') {
+        needdownload = true;
+        break;
       }
+    }
+    if (needdownload) {
+      this.autotest.Run([runproject]).then(result => {
+        if (result) {
+          self.confirmationService.confirm({
+            message: 'Are you sure that you want to update the case test result?',
+            accept: () => {
+              self.RefreshProject();
+            }
+          });
+        }
+      });
+    }
+    else {
+      this.autotest.RunPhantomjs([runproject]).then(result => {
+        if (result) {
+          self.confirmationService.confirm({
+            message: 'Are you sure that you want to update the case test result?',
+            accept: () => {
+              self.RefreshProject();
+            }
+          });
+        }
+      });
+    }
+  }
+  RefreshProject(): void {
+    this.autotest.GetTestResult().then(response => {
+      let project = JSON.parse(response);
+      this.scenario.cases[0] = project[0].scenarios[0].cases[0];
+      this.global.Projects[this.currentProjectId - 1].scenarios[this.currentScenarioId - 1] = this.scenario;
     });
   }
   exportTestCase(): void {

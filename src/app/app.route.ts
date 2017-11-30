@@ -5,13 +5,14 @@ import { ProjectComponent } from './pages/project/project.component';
 import { ScenarioComponent } from './pages/scenario/scenario.component';
 import { ExtensionComponent } from './pages/extension/extension.component';
 import { StepComponent } from './pages/step/step.component';
+import { CaseComponent } from './pages/case/case.component';
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'project/:id', component: ProjectComponent },
   { path: 'scenario', component: ScenarioComponent },
   { path: 'extension', component: ExtensionComponent },
-  { path: 'Case', component: StepComponent }
+  { path: 'Case', component: CaseComponent }
 ];
 
 @NgModule({
