@@ -5,49 +5,15 @@
   margin-bottom: 30px;
 }
 .project{
-  margin: 1%;
+  margin: 15px;
   border: 1px solid #ffffff;
   border-radius: 10px;
   background-color: #ffffff;
-  padding: 1%;
+  padding: 15px;
 }
 .project ul{
   padding-left: 0px
 }
 .project li{
   list-style-type: none;
-}
-.btncss{
-  width: 60%;
-}
-.btnRow{
-  padding: 2%;
-}
-.UploadCssRow{
-  width: 80%;
-  margin-left: 5%;
-  padding-bottom: 1%;
-}
-.ViewListCss{
-  margin-top: 0.5%;
-  width: 48%;
-  margin-right: 0.7%;
-  background-color: beige;
-}
-.liRowCss{
-  /* float:right; */
-  margin-left: 0.1%;
-}
-.ContentRow{
-  width: 110%;
-  margin-left: -9%;
-  /* word-wrap:break-word; 
-  word-break:break-all;  */
-}
-.caseinfo{
-  /* margin: 15px; */
-  /* border: 1px solid #ffffff; */
-  border-radius: 10px;
-  /* background-color: #ffffff; */
-  padding: 15px;
 }

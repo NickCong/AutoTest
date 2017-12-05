@@ -7,8 +7,6 @@ import { ScenarioModule } from '../../common/models/scenario.module';
 import { CaseModule } from '../../common/models/case.module';
 import { ProjectModule } from '../../common/models/project.module';
 import { AllProject } from '../../common/models/allproject.module';
-import { RunAutoTestService } from '../../common/services/runautotest.service';
-import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 import 'rxjs/add/operator/switchMap';
 import * as $ from 'jquery'
 
@@ -27,26 +25,10 @@ export class ScenarioComponent implements OnInit {
   scenario: ScenarioModule;
   onecase: CaseModule;
   newsteporder: number;
-  operations =[
-    {label:'Select', value:null},
-    {label:'Click', value:{id:1, name: 'Click'}},
-    {label:'Input', value:{id:2, name: 'Input'}},
-    {label:'Dropdown', value:{id:3, name: 'Dropdown'}},
-    {label:'Assertion', value:{id:4, name: 'Assertion'}}
-];
-  selectors = [
-    {label:'Select', value:null},
-    {label:'ID', value:{id:1, name: 'ID'}},
-    {label:'Name', value:{id:2, name: 'Name'}},
-    {label:'Class', value:{id:3, name: 'Class'}},
-    {label:'Text', value:{id:3, name: 'Text'}},
-    {label:'Partial Link Text', value:{id:3, name: 'Partial Link Text'}},
-    {label:'Tag Name', value:{id:3, name: 'Tag Name'}},
-    {label:'XPath', value:{id:3, name: 'XPath'}},
-    {label:'CSS Selector', value:{id:3, name: 'CSS Selector'}}
-];
-  constructor(private router: Router, private route: ActivatedRoute, private global: AllProject, private autotest: RunAutoTestService, private confirmationService: ConfirmationService) {
-    this.projects = this.global.Projects;
+  operations = ['Click','Input','Select','Assertion'];
+  selectors = ['ID', 'Name', 'Class', 'Text', 'Partial Link Text', 'Tag Name', 'XPath', 'CSS Selector'];
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject) {
+    this.projects = global.Projects;
     this.currentProjectId = parseInt(this.route.params["value"].projectid);
     this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
     this.project = this.projects[this.currentProjectId - 1];
@@ -55,7 +37,7 @@ export class ScenarioComponent implements OnInit {
         scenario_id: this.currentScenarioId,
         scenario_name: '',
         scenario_description: '',
-        scenario_url: [{ order: 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' }],
+        scenario_url: [{ order: 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }],
         cases: [],
       };
     } else {
@@ -66,7 +48,7 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' }]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
     };
   }
 
@@ -75,7 +57,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   addnew(): void {
-    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'',textTag:'' })
+    this.scenario.scenario_url.push({ order: this.scenario.scenario_url.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' })
   }
 
   removeCurrent(): void {
@@ -91,70 +73,8 @@ export class ScenarioComponent implements OnInit {
       case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
       case_description: '',
       case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait:'',enterValue: '', type: 'ID', typePath: '', steps_result:'' ,textTag:''}]
+      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', enterValue: '', type: 'ID', typePath: '', steps_result:'' }]
     };
-  }
-
-  editCase(i: number): void {
-    this.router.navigate(['/Case',{projectid:this.project.project_air_id, scenarioid: this.scenario.scenario_id,caseid:i}]);
-  }
-  runCase(i: number): void {
-    let runproject = {
-      base_url: this.project.base_url, user: this.project.user, password: this.project.password,
-      project_name: this.project.project_name,
-      project_air_id: this.project.project_air_id,
-      project_description: this.project.project_description,
-      scenarios: []
-    };
-    let runscenario = {
-      scenario_id: this.scenario.scenario_id,
-      scenario_name: this.scenario.scenario_name,
-      scenario_description: this.scenario.scenario_description,
-      scenario_url: [],
-      cases: [],
-    };
-    let runcase = this.scenario.cases[i];
-    let self = this;
-    runscenario.cases = [runcase];
-    runproject.scenarios = [runscenario];
-    let needdownload = false;
-    for (let j = 0; j < runcase.steps.length; j++) {
-      if (runcase.steps[j].action == 'Download') {
-        needdownload = true;
-        break;
-      }
-    }
-    if (needdownload) {
-      this.autotest.Run([runproject]).then(result => {
-        if (result) {
-          self.confirmationService.confirm({
-            message: 'Are you sure that you want to update the case test result?',
-            accept: () => {
-              self.RefreshProject();
-            }
-          });
-        }
-      });
-    }
-    else {
-      this.autotest.RunPhantomjs([runproject]).then(result => {
-        if (result) {
-          self.confirmationService.confirm({
-            message: 'Are you sure that you want to update the case test result?',
-            accept: () => {
-              self.RefreshProject();
-            }
-          });
-        }
-      });
-    }
-  }
-  RefreshProject(): void {
-    this.autotest.GetTestResult().then(response => {
-      let project = JSON.parse(response);
-      this.scenario.cases[0] = project[0].scenarios[0].cases[0];
-      this.global.Projects[this.currentProjectId - 1].scenarios[this.currentScenarioId - 1] = this.scenario;
-    });
   }
   exportTestCase(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
@@ -190,8 +110,5 @@ export class ScenarioComponent implements OnInit {
       this.project.scenarios[this.scenario.scenario_id-1]= this.scenario;
     }
     this.router.navigate(['/project', this.project.project_air_id]);
-  }
-  createSep(){
-    this.router.navigate(['/Case',{projectid:this.project.project_air_id, scenarioid: this.scenario.scenario_id,caseid: this.scenario.cases.length+1 }]);
   }
 }

@@ -4,7 +4,6 @@ import { RunAutoTestService } from '../../common/services/runautotest.service';
 import { AllProject } from '../../common/models/allproject.module';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
-import {ConfirmDialogModule,ConfirmationService} from 'primeng/primeng';
 //import {FileUploadModule} from 'primeng/primeng';
 
 @Component({
@@ -13,18 +12,16 @@ import {ConfirmDialogModule,ConfirmationService} from 'primeng/primeng';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  projects: any[];
+  projects: ProjectModule[];
   selectProjects: number[];
-  files: any;
-
-  constructor(private router: Router, private global: AllProject, private autotest: RunAutoTestService,private confirmationService: ConfirmationService) {
+  
+  constructor(private router: Router, global: AllProject, private autotest: RunAutoTestService) {
     this.projects = global.Projects;
     this.selectProjects = [];
-    this.files = [];
   }
 
   ngOnInit() {
-
+    
   }
 
   newProject(): void {
@@ -38,27 +35,22 @@ export class HomeComponent implements OnInit {
   viewProject(project: ProjectModule, IsView: number): void {
     this.router.navigate(['/project', project.project_air_id]);
   }
-  removeProject(project: ProjectModule): void {
-    let newprojects = [];
-    for (let i = 0; i < this.projects.length; i++) {
-      if (this.projects[i].project_air_id != project.project_air_id) {
-        newprojects.push(this.projects[i]);
-      }
-    }
-    this.projects = newprojects;
-    this.global.Projects = this.projects;
+
+  myUploader(event) {
+    console.log(event.files[0])
+    this.autotest.UploadFile(event.files[0]).then(heroes => this.projects = heroes);;
+  }
+  selectProject(id: number): void {
+    this.selectProjects.push(id);
   }
 
   exportSelectProject(): void {
     var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     let result = [];
-    let self = this;
-    $('.project.ViewListCss.col-xs-6.caseinfo input').each(function(index, ele) {
-      if ((<HTMLInputElement>ele).checked) {
-        result.push(self.projects[index])
-      }
-    });
-
+    for (let index = 0; index < this.selectProjects.length; index++) {
+      let temp = this.selectProjects[index]
+      result.push(this.projects[temp - 1]);
+    }
     var content = JSON.stringify(result);
     var blob = new Blob([content]);
     //aLink.download = "TestCase.json";
@@ -68,44 +60,12 @@ export class HomeComponent implements OnInit {
     aLink.click();
     window.URL.revokeObjectURL(aLink.href);
   }
-  runSelectProject(): void {
-    $("#UploadRow").addClass("hidden");
-    let result = [];
-    let self = this;
-    $('.project.ViewListCss.col-xs-6.caseinfo input').each(function(index, ele) {
-      if ((<HTMLInputElement>ele).checked) {
-        result.push(self.projects[index])
-      }
-    });
-    this.autotest.Run(result).then(result => {
-      if (result) {
-        //alert('AutoTest Finished!');
-        this.confirmationService.confirm({
-            message: 'Are you sure that you want to update the project test result?',
-            accept: () => {
-                self.RefreshProject();
-            }
-        });
-      }
-    });
-  }
-  RefreshProject(): void {
-    $("#UploadRow").addClass("hidden");
-    this.autotest.GetTestResult().then(response => { this.projects = JSON.parse(response); this.global.Projects = JSON.parse(response); });
-  }
-  myUploader(event) {
-    if (event.files != null) {
-      $("#UploadRow").addClass("hidden");
-      let self = this;
-      this.autotest.UploadFile(event.files[0]).then(function(response) {
-        self.projects = JSON.parse(response);
-        self.global.Projects = JSON.parse(response);
-      })
-    };
-
-    //event.files == files to upload
-  }
-  UploadProject() {
-    $("#UploadRow").removeClass("hidden");
+  runProject(): void {
+    let content = JSON.stringify(this.projects);
+    let a
+    this.autotest.Run(this.projects).then(result => a = result);
+    if(a){
+      alert('Success');
+    }
   }
 }
