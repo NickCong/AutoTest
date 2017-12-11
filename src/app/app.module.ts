@@ -14,9 +14,13 @@ import { ProjectComponent } from './pages/project/project.component';
 import { ScenarioComponent } from './pages/scenario/scenario.component';
 import { AllProject } from './common/models/allproject.module';
 import { RunAutoTestService } from './common/services/runautotest.service';
+import { DynamoDBService } from './common/services/dynamodb.service';
 //import {FileUploadModule} from 'primeng/primeng';
-//import {CalendarModule} from 'primeng/primeng';
+import {ConfirmDialogModule,ConfirmationService} from 'primeng/primeng';
 import {DropdownModule} from 'primeng/primeng';
+import {FileUploadModule} from 'primeng/primeng';
+import { CaseComponent } from './pages/case/case.component';
+import {DialogModule} from 'primeng/primeng';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +28,8 @@ import {DropdownModule} from 'primeng/primeng';
     ExtensionComponent,
     StepComponent,
     ProjectComponent,
-    ScenarioComponent
+    ScenarioComponent,
+    CaseComponent
   ],
   imports: [
     BrowserModule,
@@ -34,13 +39,14 @@ import {DropdownModule} from 'primeng/primeng';
     HttpClientModule,
     BrowserAnimationsModule,
     AppRouteModule,
-    //CalendarModule,
-    DropdownModule,
-  //  FileUploadModule,
-    AllProject
+    FileUploadModule,
+    AllProject,
+    DialogModule,
+    ConfirmDialogModule,
+    DropdownModule
 
   ],
-  providers: [RunAutoTestService],
+  providers: [RunAutoTestService,ConfirmationService,DynamoDBService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

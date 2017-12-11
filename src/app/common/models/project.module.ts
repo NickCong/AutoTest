@@ -6,5 +6,7 @@ export class ProjectModule{
   project_name: string;
   project_air_id: string;
   project_description: string;
+  scenario_count:string;
+  scenarioIDs=[];
   scenarios:ScenarioModule[]
 }

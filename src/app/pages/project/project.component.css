@@ -17,3 +17,47 @@
 .scenariodetail li {
   list-style-type: none;
 }
+.row{
+  /* margin-right: -15px;
+  margin-left: -15px; */
+  /* padding: 1%; */
+  padding: 0.5%;
+}
+.btnCss{
+  padding: 0.5%;
+  width: 13%;
+  margin-left: 0.5%;
+}
+.btnRowCss{
+  margin-top: 1%;
+}
+.ViewListCss{
+  margin-top: 1%;
+  width: 29%;
+  margin-left: 1%;
+  background-color: beige;
+}
+.liRowCss{
+  /* float:right; */
+  margin-left: 0.1%;
+}
+.ContentRow{
+  width: 110%;
+  margin-left: -1%;
+  margin-top: 0%;
+  /* word-wrap:break-word; 
+  word-break:break-all;  */
+}
+/* .liCss{
+  margin-left: -25%;
+} */
+.ulCss{
+  margin-left: -11%;
+}
+.caseinfo{
+  margin: 15px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  /* background-color: #ffffff; */
+  padding: 15px;
+}
