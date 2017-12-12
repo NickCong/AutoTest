@@ -8,8 +8,8 @@ export const environment = {
 };
 export const  AWS_CONFIGURATION  = {
   endpoint: 'dynamodb.us-east-2.amazonaws.com',
-  accessKeyId: 'AKIAI353EPBQCYBC3MCQ',//AKIAI3H5QDUXBDRWITQQ
-  secretAccessKey: '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',//u1n19AxPm7pMRVcXivU7CRm5LMVVSkLiHTPADb3T
+  accessKeyId: 'AKIAIKZH77ILYHODLGWQ',//AKIAI3H5QDUXBDRWITQQ
+  secretAccessKey: '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',//u1n19AxPm7pMRVcXivU7CRm5LMVVSkLiHTPADb3T
   region: 'us-east-2',
   PROJECTTABLENAME:'ATCProject',
   SCENARIOTABLENAME:'ATCScenario',

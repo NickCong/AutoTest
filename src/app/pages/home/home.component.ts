@@ -30,7 +30,8 @@ export class HomeComponent implements OnInit {
   }
 
   TestDynamoDB(): void {
-    this.autotest.CreateTable();
+    //this.autotest.CreateTable();
+    this.autotest.RunNew('SEP Auto Test')
   }
 
   newProject(): void {
@@ -49,13 +50,13 @@ export class HomeComponent implements OnInit {
     for(let ps in project.scenarioIDs)
     {
       this.removeScenario(ps);
-    } 
+    }
     let params = {
       TableName: AWS_CONFIGURATION.PROJECTTABLENAME,
       Key: {
         'ProjectName': project.project_name,
       },
-    }      
+    }
     this.autotest.RemoveProject(params);
   }
 
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit {
           Key: {
             'ID': result.Item.Cases[i],
           },
-        }    
+        }
         self.autotest.RemoveCase(params);
       }
     });
@@ -78,7 +79,7 @@ export class HomeComponent implements OnInit {
       Key: {
         'ID': scenarioid,
       },
-    }    
+    }
     this.autotest.RemoveCase(params);
   }
 

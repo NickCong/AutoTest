@@ -28,6 +28,12 @@ export class RunAutoTestService {
       .toPromise()
       .then(response => response.json());
   }
+  RunNew(project: string): void {
+    this.http
+      .post(`http://localhost:2752/home/StartAutoTestNew`, { projectName: project }, { headers: this.headers })
+      .toPromise()
+      .then(response => response.json());
+  }
   RunPhantomjs(project: ProjectModule[]): Promise<string> {
     let content = JSON.stringify(project);
     return this.http
@@ -127,6 +133,11 @@ export class RunAutoTestService {
 
   CreateProject(params: any): void {
     this.dynamoDB.insertData(params, (error, result) => {
+    });
+  }
+
+  UpdateProject(params: any): void {
+    this.dynamoDB.updateData(params, (error, result) => {
     });
   }
 

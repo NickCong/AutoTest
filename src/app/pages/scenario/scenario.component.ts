@@ -223,7 +223,7 @@ export class ScenarioComponent implements OnInit {
     };
     if (this.exist) {
       params.Item.Order = this.scenario.scenario_order;
-      params.Item.Cases = this.AWSScenario.Cases;     
+      params.Item.Cases = this.AWSScenario.Cases;
     }
     else{
       this.project.scenarioIDs.push(this.scenario.scenario_id)
@@ -237,7 +237,7 @@ export class ScenarioComponent implements OnInit {
           },
         }
       };
-      this.autotest.CreateProject(projectparams);
+      this.autotest.UpdateProject(projectparams);
     }
     this.autotest.CreateScenario(params);
     this.router.navigate(['/project', { name: this.project.project_name, IsView: false }]);

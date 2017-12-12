@@ -41,34 +41,54 @@ export class ProjectComponent implements OnInit {
       scenarioIDs:[],
       scenarios: []
     }
-    let self = this;
-    this.autotest.CheckProjectExist(self.currentProjectName, function (err, data) {
-      if (!err) {
-        console.log(data);
-        for (let i = 0; i < data.Count; i++) {
-          if (data.Items[i].ProjectName == self.currentProjectName) {
-            self.Exist =true;
-            self.autotest.GetProjectByName(self.currentProjectName,(error, result) => {
-              self.currentProject =  new ProjectModule;
-              self.currentProject.base_url = result.Item.BaseUrl;
-              self.currentProject.project_name = result.Item.ProjectName;
-              self.currentProject.project_description = result.Item.Description;
-              self.currentProject.user = result.Item.User;
-              self.currentProject.password = result.Item.Password;
-              self.currentProject.scenarioIDs = result.Item.ScenarioIDs;
-              self.currentProject.scenario_count = result.Item.ScenarioIDs.length;
-            });
-            break;
-          }
-        }
-      }     
-    });    
   }
 
   ngOnInit() {
     /*this.route.paramMap
       .switchMap((params: ParamMap) => this.heroService.getHeroes3(+params.getAll('id')))
       .subscribe(h => this.hero = h);*/
+      let self = this;
+      this.autotest.CheckProjectExist(self.currentProjectName, function (err, data) {
+        if (!err) {
+          console.log(data);
+          for (let i = 0; i < data.Count; i++) {
+            if (data.Items[i].ProjectName == self.currentProjectName) {
+              self.Exist =true;
+              self.autotest.GetProjectByName(self.currentProjectName,(error, result) => {
+                self.currentProject.base_url = result.Item.BaseUrl;
+                self.currentProject.project_name = result.Item.ProjectName;
+                self.currentProject.project_description = result.Item.Description;
+                self.currentProject.user = result.Item.User;
+                self.currentProject.password = result.Item.Password;
+                self.currentProject.scenarioIDs = result.Item.ScenarioIDs;
+                self.currentProject.scenario_count = result.Item.ScenarioIDs.length;
+                self.currentProject.scenarios = [];
+                for(let j=0;j<result.Item.ScenarioIDs.length;j++)
+                {
+                  self.autotest.GetScenarioById(result.Item.ScenarioIDs[j], (err: any, data: any)=>{
+                      if(err){
+                        console.log(err)
+                      }
+                      else{
+                        let scenario =new ScenarioModule;
+                        scenario.scenario_id = data.Item.ID;
+                        scenario.scenario_order=data.Item.Order;
+                        scenario.scenario_name=data.Item.SName;
+                        scenario.scenario_description=data.Item.Description;
+                        scenario.scenario_url=[];
+                        scenario.cases=[];
+                        self.currentProject.scenarios.push(scenario);
+                        console.log('scenario ' + j);
+                        console.log(self.currentProject);
+                      }
+                  })
+                }
+              });
+              break;
+            }
+          }
+        }
+      });
 
   }
   editScenario(scenarioid): void {
@@ -121,10 +141,33 @@ export class ProjectComponent implements OnInit {
       });
     }
   }
+
+  deleteScenario(scenarioid: string): void {
+    let self = this;
+    this.autotest.GetScenarioById(scenarioid, (error, result) => {
+      result.Item.Cases;
+      for(let i=0;i<result.Item.Cases.length;i++){
+        let params = {
+          TableName: AWS_CONFIGURATION.CASETABLENAME,
+          Key: {
+            'ID': result.Item.Cases[i],
+          },
+        }
+        self.autotest.RemoveCase(params);
+      }
+    });
+    let params = {
+      TableName: AWS_CONFIGURATION.SCENARIOTABLENAME,
+      Key: {
+        'ID': scenarioid,
+      },
+    }
+    this.autotest.RemoveCase(params);
+  }
   RefreshProject(): void {
     this.autotest.GetTestResult().then(response => {
       let project = JSON.parse(response);
-      this.currentProject.scenarios[project[0].scenarios[0].scenario_id - 1] = project[0].scenarios[0];     
+      this.currentProject.scenarios[project[0].scenarios[0].scenario_id - 1] = project[0].scenarios[0];
     });
   }
   exportAllScenario(): void {
@@ -166,7 +209,7 @@ export class ProjectComponent implements OnInit {
         User: this.currentProject.user,
         Password: this.currentProject.password,
         BaseUrl: this.currentProject.base_url,
-        ScenarioIDs: [],
+        ScenarioIDs: this.currentProject.scenarioIDs,
         ManageGroup: []
       }
     };
@@ -174,4 +217,5 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['/home']);
     $("#UploadRow").removeClass("hidden");
   }
+
 }

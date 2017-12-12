@@ -52,7 +52,7 @@
 </div>
 <div class="row text-center btnRowCss">
 <button *ngIf='ISEidt'type="button" name="saveproject" id='saveprojectid' class="btn btn-primary btnCss" (click)='saveProject()'>Save Project</button>
-<button *ngIf='Exist' type="button" id='createScenarioid' class="btn btn-primary btnCss" (click)='newScenario()'>New Scenario</button>
+<button *ngIf='ISEidt' type="button" id='createScenarioid' class="btn btn-primary btnCss" (click)='newScenario()'>New Scenario</button>
 <button *ngIf='Exist' type="button" id='exportScenarioid' class="btn btn-primary btnCss" (click)='exportScenario()'>Export Select Scenario</button>
 <button *ngIf='Exist' type="button" id='exportScenarioid' class="btn btn-primary btnCss" (click)='exportAllScenario()'>Export All Scenario</button>
 </div>
@@ -64,8 +64,8 @@
       <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"></button>
     </p-footer>
   </p-confirmDialog>
-<div class="row ContentRow" *ngIf='currentProjectId>0'>
-  <div *ngFor='let scenario of currentProject.scenarios;let i = index' class="scenariodetail ViewListCss col-xs-6 caseinfo">
+<div class="row ContentRow">
+  <div *ngFor='let scenario of currentProject.scenarios' class="scenariodetail ViewListCss col-xs-6 caseinfo">
     <ul *ngIf='scenario' class="ulCss">
         <div class="row liRowCss">
       <li><input type="checkbox" aria-label="..."></li>
@@ -74,8 +74,9 @@
     </div>
     <div class="row liRowCss">
       <li>
-        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editScenario(i+1)'>Edit Scenario</button>
-        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-info" (click)='runScenario(i)'>Run Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-success" (click)='editScenario(scenario.scenario_id)'>Edit Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-info" (click)='runScenario(scenario.scenario_id)'>Run Scenario</button>
+        <button type="button" name="editscenario" id='editscenarioid' class="btn btn-default" (click)='deleteScenario(scenario.scenario_id)'>Delete Scenario</button>
       </li>
     </div>
     </ul>
