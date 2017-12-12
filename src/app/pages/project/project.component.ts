@@ -30,8 +30,8 @@ export class ProjectComponent implements OnInit {
   newscenarioid: number;
   constructor(private router: Router, private route: ActivatedRoute, private autotest: RunAutoTestService, private confirmationService: ConfirmationService) {
     this.currentProjectName = this.route.params["value"].name;
-    this.ISView = this.route.params["value"].IsView;
-    this.ISEidt = !this.ISView;
+    this.ISView = this.route.params["value"].IsView == 'true';
+    this.ISEidt = this.route.params["value"].IsView == 'false';
     this.currentProject = {
       base_url: '', user: '', password: '',
       project_name: '',
@@ -72,7 +72,7 @@ export class ProjectComponent implements OnInit {
 
   }
   editScenario(scenarioid): void {
-    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: scenarioid }]);
+    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: scenarioid, source:"exist" }]);
   }
   runScenario(scenarioindex): void {
     let result = {
@@ -155,7 +155,7 @@ export class ProjectComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   newScenario(): void {
-    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: this.newscenarioid, source:"new" }]);
+    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: this.autotest.GenerateUUID(), source:"new" }]);
   }
   saveProject(): void {
     var params = {

@@ -14,8 +14,12 @@ import { asQueryList } from '@angular/core/src/view';
 export class RunAutoTestService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
   PROJECTTABLENAME: string;
+  SCENARIOTABLENAME: string;
+  CASETABLENAME:string;
   constructor(private http: Http, private httpclient: HttpClient, private dynamoDB: DynamoDBService) {
     this.PROJECTTABLENAME = AWS_CONFIGURATION.PROJECTTABLENAME;
+    this.SCENARIOTABLENAME = AWS_CONFIGURATION.SCENARIOTABLENAME;
+    this.CASETABLENAME = AWS_CONFIGURATION.CASETABLENAME;
   }
   Run(project: ProjectModule[]): Promise<string> {
     let content = JSON.stringify(project);
@@ -53,7 +57,8 @@ export class RunAutoTestService {
   GetAllProject(params, callback: (err: any, data: any) => void): void {
     this.dynamoDB.scanData(params, callback);
   }
-  GenerateUUID() {
+
+  GenerateUUID(): string {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       var r = (d + Math.random() * 16) % 16 | 0;
@@ -65,9 +70,29 @@ export class RunAutoTestService {
 
   GetProjectByName(name: string, callback: (err: any, data: any) => void): void {
     var params = {
-      TableName: 'ATCProject',
+      TableName: this.PROJECTTABLENAME,
       Key: {
         ProjectName: name
+      }
+    };
+    this.dynamoDB.readData(params, callback);
+  }
+
+  GetScenarioById(id: string, callback: (err: any, data: any) => void): void {
+    var params = {
+      TableName: this.SCENARIOTABLENAME,
+      Key: {
+        ID: id
+      }
+    };
+    this.dynamoDB.readData(params, callback);
+  }
+
+  GetCaseById(id: string, callback: (err: any, data: any) => void): void {
+    var params = {
+      TableName: this.CASETABLENAME,
+      Key: {
+        ID: id
       }
     };
     this.dynamoDB.readData(params, callback);
@@ -88,17 +113,35 @@ export class RunAutoTestService {
     this.dynamoDB.scanData(params, callback);
   }
 
-  CreateProject(params: any): void {
-    let project: ProjectModule;
+  CreateScenario(params: any): void {
     this.dynamoDB.insertData(params, (error, result) => {
+      if(error)
+      {
+        console.log(error)
+      }
+      else{
+        console.log(result)
+      }
+    });
+  }
 
+  CreateProject(params: any): void {
+    this.dynamoDB.insertData(params, (error, result) => {
     });
   }
 
   RemoveProject(params: any): void {
-    let project: ProjectModule;
     this.dynamoDB.deleteData(params, (error, result) => {
+    });
+  }
 
+  RemoveScenario(params: any): void {
+    this.dynamoDB.deleteData(params, (error, result) => {
+    });
+  }
+
+  RemoveCase(params: any): void {
+    this.dynamoDB.deleteData(params, (error, result) => {
     });
   }
 

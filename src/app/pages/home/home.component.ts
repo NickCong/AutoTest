@@ -44,18 +44,46 @@ export class HomeComponent implements OnInit {
   viewProject(project: ProjectModule, IsView): void {
     this.router.navigate(['/project', {name:project.project_name, IsView:true}]);
   }
+
   removeProject(project: ProjectModule): void {
-    var params = {
+    for(let ps in project.scenarioIDs)
+    {
+      this.removeScenario(ps);
+    } 
+    let params = {
       TableName: AWS_CONFIGURATION.PROJECTTABLENAME,
       Key: {
         'ProjectName': project.project_name,
       },
-    }
+    }      
     this.autotest.RemoveProject(params);
   }
 
+  removeScenario(scenarioid: string): void {
+    let self = this;
+    this.autotest.GetScenarioById(scenarioid, (error, result) => {
+      result.Item.Cases;
+      for(let i=0;i<result.Item.Cases.length;i++){
+        let params = {
+          TableName: AWS_CONFIGURATION.CASETABLENAME,
+          Key: {
+            'ID': result.Item.Cases[i],
+          },
+        }    
+        self.autotest.RemoveCase(params);
+      }
+    });
+    let params = {
+      TableName: AWS_CONFIGURATION.SCENARIOTABLENAME,
+      Key: {
+        'ID': scenarioid,
+      },
+    }    
+    this.autotest.RemoveCase(params);
+  }
+
   exportSelectProject(): void {
-    var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
+    let aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     let result = [];
     let self = this;
     $('.project.ViewListCss.col-xs-6.caseinfo input').each(function (index, ele) {
@@ -64,8 +92,8 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    var content = JSON.stringify(result);
-    var blob = new Blob([content]);
+    let content = JSON.stringify(result);
+    let blob = new Blob([content]);
     //aLink.download = "TestCase.json";
     //aLink.href = URL.createObjectURL(blob);
     aLink.setAttribute('href', URL.createObjectURL(blob));
@@ -117,7 +145,7 @@ export class HomeComponent implements OnInit {
               "ManageGroup": []
             },
           }
-          this.autotest.CreateProject(params);
+          self.autotest.CreateProject(params);
         }
         self.GetAllProject();
       })
