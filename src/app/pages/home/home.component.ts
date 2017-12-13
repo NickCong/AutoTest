@@ -29,11 +29,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-  TestDynamoDB(): void {
-    //this.autotest.CreateTable();
-    this.autotest.RunNew('SEP Auto Test')
-  }
-
   newProject(): void {
     this.router.navigate(['/project', {name:'-1', IsView:false}]);
   }
@@ -84,7 +79,15 @@ export class HomeComponent implements OnInit {
   }
 
   exportSelectProject(): void {
-    let aLink = <HTMLLinkElement>document.getElementById("testcasefile");
+    let result = [];
+    let self = this;
+    $('.project.ViewListCss.col-xs-6.caseinfo input').each(function (index, ele) {
+      if ((<HTMLInputElement>ele).checked) {
+        result.push(self.projects[index].project_name)
+      }
+    });
+    this.autotest.Export(result);
+    /*let aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     let result = [];
     let self = this;
     $('.project.ViewListCss.col-xs-6.caseinfo input').each(function (index, ele) {
@@ -100,7 +103,7 @@ export class HomeComponent implements OnInit {
     aLink.setAttribute('href', URL.createObjectURL(blob));
     aLink.setAttribute('download', "TestCase.json");
     aLink.click();
-    window.URL.revokeObjectURL(aLink.href);
+    window.URL.revokeObjectURL(aLink.href);*/
   }
   runSelectProject(): void {
     $("#UploadRow").addClass("hidden");
@@ -108,20 +111,10 @@ export class HomeComponent implements OnInit {
     let self = this;
     $('.project.ViewListCss.col-xs-6.caseinfo input').each(function (index, ele) {
       if ((<HTMLInputElement>ele).checked) {
-        result.push(self.projects[index])
+        result.push(self.projects[index].project_name)
       }
     });
-    this.autotest.Run(result).then(result => {
-      if (result) {
-        //alert('AutoTest Finished!');
-        this.confirmationService.confirm({
-          message: 'Are you sure that you want to update the project test result?',
-          accept: () => {
-            self.RefreshProject();
-          }
-        });
-      }
-    });
+    this.autotest.RunProjects(result);
   }
   RefreshProject(): void {
     $("#UploadRow").addClass("hidden");
@@ -139,7 +132,7 @@ export class HomeComponent implements OnInit {
             Key: {
               'ProjectName': result[i].project_name,
               "Description": result[i].project_description,
-              "User": result[i].user,
+              "PUser": result[i].user,
               "Password": result[i].password,
               "BaseUrl": result[i].base_url,
               "ScenarioIDs": [],
@@ -159,7 +152,7 @@ export class HomeComponent implements OnInit {
       AttributesToGet: [
         'ProjectName',
         "Description",
-        "User",
+        "PUser",
         "Password",
         "BaseUrl",
         "ScenarioIDs"
@@ -182,7 +175,7 @@ export class HomeComponent implements OnInit {
           project.base_url = data.Items[i].BaseUrl;
           project.project_name = data.Items[i].ProjectName;
           project.project_description = data.Items[i].Description;
-          project.user = data.Items[i].User;
+          project.user = data.Items[i].PUser;
           project.password = data.Items[i].Password;
           projects.push(project)
         }

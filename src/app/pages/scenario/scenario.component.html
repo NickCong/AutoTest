@@ -41,7 +41,7 @@
     <div *ngFor='let case of scenario.cases;let i = index' class="caseinfo ViewListCss col-xs-3">
         <div class="row liRowCss">
           <ul *ngIf='case'>
-            Case {{case.case_id}}:<br />
+            Case {{case.case_order}}:<br />
             Case Name: {{case.case_name}}<br />
             Case Description: {{case.case_description}}<br />
             Case Expected Result: {{case.case_expect_result}}<br />

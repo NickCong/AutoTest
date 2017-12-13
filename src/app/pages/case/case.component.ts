@@ -26,6 +26,7 @@ export class CaseComponent implements OnInit {
   currentProjectId: string;
   currentScenarioId: string;
   CaseId: string;
+  order:string;
   onecase: CaseModule;
   steps: StepModule[];
   StepID: number;
@@ -40,10 +41,11 @@ export class CaseComponent implements OnInit {
     this.currentScenarioId = this.route.params["value"].scenarioid;
     this.CaseId = this.route.params["value"].caseid;
     this.exist = this.route.params["value"].source == 'exist';
-    
+    this.order = this.route.params["value"].order;
     this.onecase = {
       case_id: this.CaseId,
       case_name: '',
+      case_order:'',
       case_description: '',
       case_expect_result: '',
       case_actual_result:'',
@@ -58,12 +60,13 @@ export class CaseComponent implements OnInit {
     this.autotest.GetCaseById(this.CaseId, (error, result) => {
       this.onecase = new CaseModule;
       this.onecase.case_id = result.Item.ID;
-      this.onecase.case_name = result.Item.Name;
+      this.onecase.case_name = result.Item.CName;
       this.onecase.case_description = result.Item.Description;
       this.onecase.case_expect_result = result.Item.Expect_result;
       this.onecase.case_actual_result = result.Item.Actual_result;
       this.onecase.case_runtime= result.Item.RunTime;
       this.onecase.case_starttime= result.Item.Starttime;
+      this.onecase.case_order = result.Item.Order;
       this.onecase.steps=result.Item.Steps;
       if(this.onecase.steps!=null&&this.onecase.steps!=undefined){
         this.steps=this.onecase.steps;
@@ -77,14 +80,15 @@ export class CaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
   createcase(): void {
     let params = {
       TableName: AWS_CONFIGURATION.CASETABLENAME,
       Item: {
         ID:this.CaseId,
-        Name: this.onecase.case_name,
+        Order:this.order,
+        CName: this.onecase.case_name,
         Description: this.onecase.case_description,
         Expect_result: this.onecase.case_expect_result,
         Actual_result: this.onecase.case_actual_result,
@@ -98,7 +102,7 @@ export class CaseComponent implements OnInit {
         TableName: AWS_CONFIGURATION.CASETABLENAME,
         Key: { ID: this.CaseId },
         AttributeUpdates: {
-          'steps': {
+          'Steps': {
             Action: 'PUT',
             Value: this.steps
           },
@@ -137,7 +141,7 @@ export class CaseComponent implements OnInit {
   editStep(i) {
     this.stepM = this.steps[i - 1];
     this.Dropdowns = [];
-    
+
     this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: Operations.find(t => t.label == this.stepM.action).label });
     this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: SelectedItem.find(t => t.label == this.stepM.type).label });
     this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: SelectedItem2.find(t => t.label == this.stepM.textTag).label });
@@ -161,6 +165,17 @@ export class CaseComponent implements OnInit {
       });
     } else {
       this.steps.push(e);
+      let caseparams = {
+        TableName : AWS_CONFIGURATION.CASETABLENAME,
+        Key: { ID : this.CaseId},
+        AttributeUpdates: {
+          'Steps': {
+            Action: 'ADD',
+            Value: [e]
+          },
+        }
+      };
+      this.autotest.UpdateProject(caseparams);
     }
   }
   getdisplay(e) {

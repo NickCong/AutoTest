@@ -58,7 +58,7 @@ export class ProjectComponent implements OnInit {
       self.currentProject.base_url = result.Item.BaseUrl;
       self.currentProject.project_name = result.Item.ProjectName;
       self.currentProject.project_description = result.Item.Description;
-      self.currentProject.user = result.Item.User;
+      self.currentProject.user = result.Item.PUser;
       self.currentProject.password = result.Item.Password;
       self.currentProject.scenarioIDs = result.Item.ScenarioIDs;
       self.currentProject.scenario_count = result.Item.ScenarioIDs.length;
@@ -170,7 +170,7 @@ export class ProjectComponent implements OnInit {
       Item: {
         ProjectName: this.currentProject.project_name,
         Description: this.currentProject.project_description,
-        User: this.currentProject.user,
+        PUser: this.currentProject.user,
         Password: this.currentProject.password,
         BaseUrl: this.currentProject.base_url,
         ScenarioIDs: this.currentProject.scenarioIDs,

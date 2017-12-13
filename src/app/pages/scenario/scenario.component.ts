@@ -62,7 +62,7 @@ export class ScenarioComponent implements OnInit {
       scenario_url: [{ order: 1, action: 'Click', wait: '', enterValue: '', type: 'ID', typePath: '', steps_result: '', textTag: '' }],
       cases: [],
     };
-  
+
     if (this.exist) {
       // get scenario by id from DB
 
@@ -79,23 +79,24 @@ export class ScenarioComponent implements OnInit {
         {
           self.autotest.GetCaseById(result.Item.Cases[j], (err: any, data: any)=>{
               if(err){
-                console.log(err) 
+                console.log(err)
               }
               else{
                 let temponecase = new CaseModule;
                 temponecase.case_id = data.Item.ID;
-                temponecase.case_name = data.Item.Name;
-                temponecase.case_description = data.Item.case_description;
-                temponecase.case_expect_result = data.Item.case_expect_result;
-                temponecase.case_actual_result = data.Item.case_actual_result;
+                temponecase.case_name = data.Item.CName;
+                temponecase.case_description = data.Item.Description;
+                temponecase.case_expect_result = data.Item.Expect_result;
+                temponecase.case_actual_result = data.Item.Actual_result;
+                temponecase.case_order = data.Item.Order;
                 temponecase.steps=data.Item.steps;
                 self.scenario.cases.push(temponecase)
-               
+
               }
           })
         }
       });
-     
+
     }
   }
 
@@ -126,7 +127,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   editCase(i: number): void {
-    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: i , source:"exist"}]);
+    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: i , source:"exist" ,order:0}]);
   }
   runCase(id: string): void {
       let self = this;
@@ -155,7 +156,7 @@ export class ScenarioComponent implements OnInit {
   exportTestCase(): void {
     // var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
     // let ressult = [{
-    
+
     // }];
     // var content = JSON.stringify(ressult);
     // var blob = new Blob([content]);
@@ -200,6 +201,6 @@ export class ScenarioComponent implements OnInit {
     this.router.navigate(['/project', { name: this.currentProjectName, IsView: false }]);
   }
   createSep() {
-    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: this.autotest.GenerateUUID() , source:"new" }]);
+    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: this.autotest.GenerateUUID() , source:"new", order:this.scenario.cases.length+1 }]);
   }
 }
