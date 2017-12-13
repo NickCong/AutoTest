@@ -25,38 +25,38 @@ export class RunAutoTestService {
     //  accessKeyId: 'AKIAIGJDIEUEGPI5E37Q',//AKIAI3H5QDUXBDRWITQQ
       //: '4L7htZPKJPTX5nm6JvULDUyguKMpC2L+UA3PfZUD',//u1n19AxPm7pMRVcXivU7CRm5LMVVSkLiHTPADb3T
      this.http
-      .post(`http://localhost:52894/home/Export`, { projectName: project }, { headers: this.headers })
+      .post(`http://localhost:2752/home/Export`, { projectName: project }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
   RunProjects(project: any): void {
     this.http
-      .post(`http://localhost:52894/home/StartAutoTestProjects`, { projectName: project }, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartAutoTestProjects`, { projectName: project }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
   RunProject(project: string): void {
     this.http
-      .post(`http://localhost:52894/home/StartAutoTestProject`, { projectName: project }, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartAutoTestProject`, { projectName: project }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
   RunScenario(projectName: string, scenarioID: string): void {
     this.http
-      .post(`http://localhost:52894/home/StartAutoTestScenario`, { projectName: projectName, scenarioID:scenarioID }, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartAutoTestScenario`, { projectName: projectName, scenarioID:scenarioID }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
   RunCase(projectName: string, scenarioID: string, caseID: string): void {
     this.http
-      .post(`http://localhost:52894/home/StartAutoTestCase`, { projectName: projectName, scenarioID:scenarioID, caseID: caseID}, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartAutoTestCase`, { projectName: projectName, scenarioID:scenarioID, caseID: caseID}, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
   RunPhantomjs(project: any): Promise<string> {
     let content = JSON.stringify(project);
     return this.http
-      .post(`http://localhost:52894/home/StartPhantomAutoTest`, { testcase: content }, { headers: this.headers })
+      .post(`http://localhost:2752/home/StartPhantomAutoTest`, { testcase: content }, { headers: this.headers })
       .toPromise()
       .then(response => response.json());
   }
@@ -68,13 +68,13 @@ export class RunAutoTestService {
       this.httpclient.request(req).subscribe(response =>  a = response['result']);
       return a;*/
     return this.http
-      .post(`http://localhost:52894/home/UploadFile`, fd)
+      .post(`http://localhost:2752/home/UploadFile`, fd)
       .toPromise()
       .then(response => response.json())
   }
   GetTestResult(): Promise<string> {
     return this.http
-      .get(`http://localhost:52894/home/SycActualResult`)
+      .get(`http://localhost:2752/home/SycActualResult`)
       .toPromise()
       .then(response => response.json());
   }
