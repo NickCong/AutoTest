@@ -37,8 +37,8 @@ export class ProjectComponent implements OnInit {
       project_name: '',
       project_air_id: '',
       project_description: '',
-      scenario_count:'',
-      scenarioIDs:[],
+      scenario_count: '',
+      scenarioIDs: [],
       scenarios: []
     }
   }
@@ -47,106 +47,70 @@ export class ProjectComponent implements OnInit {
     /*this.route.paramMap
       .switchMap((params: ParamMap) => this.heroService.getHeroes3(+params.getAll('id')))
       .subscribe(h => this.hero = h);*/
-      let self = this;
-      this.autotest.CheckProjectExist(self.currentProjectName, function (err, data) {
-        if (!err) {
-          console.log(data);
-          for (let i = 0; i < data.Count; i++) {
-            if (data.Items[i].ProjectName == self.currentProjectName) {
-              self.Exist =true;
-              self.autotest.GetProjectByName(self.currentProjectName,(error, result) => {
-                self.currentProject.base_url = result.Item.BaseUrl;
-                self.currentProject.project_name = result.Item.ProjectName;
-                self.currentProject.project_description = result.Item.Description;
-                self.currentProject.user = result.Item.User;
-                self.currentProject.password = result.Item.Password;
-                self.currentProject.scenarioIDs = result.Item.ScenarioIDs;
-                self.currentProject.scenario_count = result.Item.ScenarioIDs.length;
-                self.currentProject.scenarios = [];
-                for(let j=0;j<result.Item.ScenarioIDs.length;j++)
-                {
-                  self.autotest.GetScenarioById(result.Item.ScenarioIDs[j], (err: any, data: any)=>{
-                      if(err){
-                        console.log(err)
-                      }
-                      else{
-                        let scenario =new ScenarioModule;
-                        scenario.scenario_id = data.Item.ID;
-                        scenario.scenario_order=data.Item.Order;
-                        scenario.scenario_name=data.Item.SName;
-                        scenario.scenario_description=data.Item.Description;
-                        scenario.scenario_url=[];
-                        scenario.cases=[];
-                        self.currentProject.scenarios.push(scenario);
-                        console.log('scenario ' + j);
-                        console.log(self.currentProject);
-                      }
-                  })
-                }
-              });
-              break;
-            }
+    let self = this;
+    // this.autotest.CheckProjectExist(self.currentProjectName, function (err, data) {
+    // if (!err) {
+    // console.log(data);
+    // for (let i = 0; i < data.Count; i++) {
+    // if (data.Items[i].ProjectName == self.currentProjectName) {
+    // self.Exist =true;
+    self.autotest.GetProjectByName(self.currentProjectName, (error, result) => {
+      self.currentProject.base_url = result.Item.BaseUrl;
+      self.currentProject.project_name = result.Item.ProjectName;
+      self.currentProject.project_description = result.Item.Description;
+      self.currentProject.user = result.Item.User;
+      self.currentProject.password = result.Item.Password;
+      self.currentProject.scenarioIDs = result.Item.ScenarioIDs;
+      self.currentProject.scenario_count = result.Item.ScenarioIDs.length;
+      self.currentProject.scenarios = [];
+      for (let j = 0; j < result.Item.ScenarioIDs.length; j++) {
+        self.autotest.GetScenarioById(result.Item.ScenarioIDs[j], (err: any, data: any) => {
+          if (err) {
+            console.log(err)
           }
-        }
-      });
+          else {
+            let scenario = new ScenarioModule;
+            scenario.scenario_id = data.Item.ID;
+            scenario.scenario_order = data.Item.Order;
+            scenario.scenario_name = data.Item.SName;
+            scenario.scenario_description = data.Item.Description;
+            scenario.scenario_url = [];
+            scenario.cases = [];
+            self.currentProject.scenarios.push(scenario);
+            console.log('scenario ' + j);
+            console.log(self.currentProject);
+          }
+        })
+      }
+    });
+    // break;
+    // }
+    // }
+    // }
+    // });
 
   }
   editScenario(scenarioid): void {
-    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: scenarioid, source:"exist" }]);
+    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: scenarioid, source: "exist" }]);
   }
-  runScenario(scenarioindex): void {
+  runScenario(scenarioID): void {
     let result = {
-      base_url: this.currentProject.base_url, user: this.currentProject.user, password: this.currentProject.password,
-      project_name: this.currentProject.project_name,
-      project_air_id: this.currentProject.project_air_id,
-      project_description: this.currentProject.project_description,
-      scenario_count:'0',
-      scenarioIDs:[],
-      scenarios: []
-    };
-    let runscenario = this.currentProject.scenarios[scenarioindex];
-    result.scenarios = [runscenario];
+      projectName: this.currentProjectName,
+      scenarioID: scenarioID
+    }
     let self = this;
-    let needdownload = false;
-    for (let i = 0; i < runscenario.cases.length; i++) {
-      for (let j = 0; j < runscenario.cases[i].steps.length; j++) {
-        if (runscenario.cases[i].steps[j].action == 'Download') {
-          needdownload = true;
-          break;
-        }
+    this.autotest.Run(result).then(data => {
+      if (data) {
+        self.RefreshProject();
       }
-    }
-    if (needdownload) {
-      this.autotest.Run([result]).then(result => {
-        if (result) {
-          self.confirmationService.confirm({
-            message: 'Are you sure that you want to update the scenario test result?',
-            accept: () => {
-              self.RefreshProject();
-            }
-          });
-        }
-      });
-    }
-    else {
-      this.autotest.RunPhantomjs([result]).then(result => {
-        if (result) {
-          self.confirmationService.confirm({
-            message: 'Are you sure that you want to update the scenario test result?',
-            accept: () => {
-              self.RefreshProject();
-            }
-          });
-        }
-      });
-    }
+    });
   }
 
   deleteScenario(scenarioid: string): void {
     let self = this;
     this.autotest.GetScenarioById(scenarioid, (error, result) => {
       result.Item.Cases;
-      for(let i=0;i<result.Item.Cases.length;i++){
+      for (let i = 0; i < result.Item.Cases.length; i++) {
         let params = {
           TableName: AWS_CONFIGURATION.CASETABLENAME,
           Key: {
@@ -166,8 +130,8 @@ export class ProjectComponent implements OnInit {
   }
   RefreshProject(): void {
     this.autotest.GetTestResult().then(response => {
-      let project = JSON.parse(response);
-      this.currentProject.scenarios[project[0].scenarios[0].scenario_id - 1] = project[0].scenarios[0];
+      //let project = JSON.parse(response);
+      //this.currentProject.scenarios[project[0].scenarios[0].scenario_id - 1] = project[0].scenarios[0];
     });
   }
   exportAllScenario(): void {
@@ -198,11 +162,11 @@ export class ProjectComponent implements OnInit {
     window.URL.revokeObjectURL(aLink.href);
   }
   newScenario(): void {
-    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: this.autotest.GenerateUUID(), source:"new" }]);
+    this.router.navigate(['/scenario', { projectName: this.currentProjectName, scenarioid: this.autotest.GenerateUUID(), source: "new" }]);
   }
   saveProject(): void {
     var params = {
-      TableName : AWS_CONFIGURATION.PROJECTTABLENAME,
+      TableName: AWS_CONFIGURATION.PROJECTTABLENAME,
       Item: {
         ProjectName: this.currentProject.project_name,
         Description: this.currentProject.project_description,

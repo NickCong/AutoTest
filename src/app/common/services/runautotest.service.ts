@@ -21,7 +21,7 @@ export class RunAutoTestService {
     this.SCENARIOTABLENAME = AWS_CONFIGURATION.SCENARIOTABLENAME;
     this.CASETABLENAME = AWS_CONFIGURATION.CASETABLENAME;
   }
-  Run(project: ProjectModule[]): Promise<string> {
+  Run(project: any): Promise<string> {
     let content = JSON.stringify(project);
     return this.http
       .post(`http://localhost:2752/home/StartAutoTest`, { testcase: content }, { headers: this.headers })
@@ -34,7 +34,7 @@ export class RunAutoTestService {
       .toPromise()
       .then(response => response.json());
   }
-  RunPhantomjs(project: ProjectModule[]): Promise<string> {
+  RunPhantomjs(project: any): Promise<string> {
     let content = JSON.stringify(project);
     return this.http
       .post(`http://localhost:2752/home/StartPhantomAutoTest`, { testcase: content }, { headers: this.headers })
@@ -103,7 +103,10 @@ export class RunAutoTestService {
     };
     this.dynamoDB.readData(params, callback);
   }
-
+  UpdateProJect(params: any): void {
+    this.dynamoDB.updateData(params, (error, result) => {
+    });
+  }
   CheckProjectExist(name: string, callback: (err: any, data: any) => void): any {
     let params = {
       /* AttributesToGet: [

@@ -23,7 +23,7 @@ export class ScenarioComponent implements OnInit {
   exist = false;
   currentProjectName: string;
   currentScenarioId: string;
-  //projects: ProjectModule[];
+  projects: ProjectModule[];
   AWSproject: any;
   AWSScenario: any;
   project: ProjectModule;
@@ -54,17 +54,6 @@ export class ScenarioComponent implements OnInit {
     this.exist = this.route.params["value"].source == 'exist';
     this.project = new ProjectModule;
     let self = this;
-    this.autotest.GetProjectByName(this.currentProjectName, (error, result) => {
-      self.project = new ProjectModule;
-      self.project.base_url = result.Item.BaseUrl;
-      self.project.project_name = result.Item.ProjectName;
-      self.project.project_description = result.Item.Description;
-      self.project.user = result.Item.User;
-      self.project.password = result.Item.Password;
-      self.project.scenarioIDs = result.Item.ScenarioIDs;
-      self.project.scenario_count = result.Item.ScenarioIDs.length;
-      self.AWSproject = result.Item;
-    });
     this.scenario = {
       scenario_id: this.currentScenarioId,
       scenario_order: '',
@@ -73,8 +62,10 @@ export class ScenarioComponent implements OnInit {
       scenario_url: [{ order: 1, action: 'Click', wait: '', enterValue: '', type: 'ID', typePath: '', steps_result: '', textTag: '' }],
       cases: [],
     };
+  
     if (this.exist) {
       // get scenario by id from DB
+
       this.autotest.GetScenarioById(this.currentScenarioId, (error, result) => {
         self.scenario = new ScenarioModule;
         self.scenario.scenario_id = result.Item.ID;
@@ -82,16 +73,30 @@ export class ScenarioComponent implements OnInit {
         self.scenario.scenario_name = result.Item.SName;
         self.scenario.scenario_order = result.Item.Order;
         self.scenario.scenario_url = result.Item.Url;
+        self.scenario.cases=[];
         self.AWSScenario = result.Item;
+        for(let j=0;j<result.Item.Cases.length;j++)
+        {
+          self.autotest.GetCaseById(result.Item.Cases[j], (err: any, data: any)=>{
+              if(err){
+                console.log(err) 
+              }
+              else{
+                let temponecase = new CaseModule;
+                temponecase.case_id = data.Item.ID;
+                temponecase.case_name = data.Item.Name;
+                temponecase.case_description = data.Item.case_description;
+                temponecase.case_expect_result = data.Item.case_expect_result;
+                temponecase.case_actual_result = data.Item.case_actual_result;
+                temponecase.steps=data.Item.steps;
+                self.scenario.cases.push(temponecase)
+               
+              }
+          })
+        }
       });
+     
     }
-    this.onecase = {
-      case_name: '',
-      case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
-      case_description: '',
-      case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait: '', enterValue: '', type: 'ID', typePath: '', steps_result: '', textTag: '' }]
-    };
   }
 
   ngOnInit() {
@@ -108,52 +113,29 @@ export class ScenarioComponent implements OnInit {
     }
   }
   getNewCase(newCase): void {
-    newCase.case_id = this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1);
-    this.scenario.cases.push(newCase);
-    this.onecase = {
-      case_name: '',
-      case_id: this.scenario.scenario_id + '-' + (this.scenario.cases.length + 1),
-      case_description: '',
-      case_expect_result: '',
-      case_actual_result: '', steps: [{ order: this.scenario.cases.length + 1, action: 'Click', wait: '', enterValue: '', type: 'ID', typePath: '', steps_result: '', textTag: '' }]
-    };
+    // this.autotest.GetCaseById(this.currentScenarioId, (error, result) => {
+    //   this.onecase = new CaseModule;
+    //   this.onecase.case_id = result.Item.ID;
+    //   this.onecase.case_name = result.Item.Name;
+    //   this.onecase.case_description = result.Item.case_description;
+    //   this.onecase.case_expect_result = result.Item.case_expect_result;
+    //   this.onecase.case_actual_result = result.Item.case_actual_result;
+    //   this.onecase.steps=result.Item.steps;
+    // });
+
   }
 
   editCase(i: number): void {
-    this.router.navigate(['/Case', { projectid: this.project.project_air_id, scenarioid: this.scenario.scenario_id, caseid: i }]);
+    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: i , source:"exist"}]);
   }
-  runCase(i: number): void {
-    let runproject = {
-      base_url: this.project.base_url,
-      user: this.project.user,
-      password: this.project.password,
-      project_name: this.project.project_name,
-      project_air_id: this.project.project_air_id,
-      project_description: this.project.project_description,
-      scenario_count: this.project.scenarioIDs.length.toString(),
-      scenarioIDs: this.project.scenarioIDs,
-      scenarios: []
-    };
-    let runscenario = {
-      scenario_id: this.scenario.scenario_id,
-      scenario_name: this.scenario.scenario_name,
-      scenario_description: this.scenario.scenario_description,
-      scenario_url: [],
-      cases: [],
-    };
-    let runcase = this.scenario.cases[i];
-    let self = this;
-    runscenario.cases = [runcase];
-    runproject.scenarios = [runscenario];
-    let needdownload = false;
-    for (let j = 0; j < runcase.steps.length; j++) {
-      if (runcase.steps[j].action == 'Download') {
-        needdownload = true;
-        break;
+  runCase(id: string): void {
+      let self = this;
+      let paras={
+        projectName:this.currentProjectName,
+        scenarioID:this.currentScenarioId,
+        caseID:id
       }
-    }
-    if (needdownload) {
-      this.autotest.Run([runproject]).then(result => {
+      this.autotest.RunPhantomjs(paras).then(result => {
         if (result) {
           self.confirmationService.confirm({
             message: 'Are you sure that you want to update the case test result?',
@@ -163,19 +145,6 @@ export class ScenarioComponent implements OnInit {
           });
         }
       });
-    }
-    else {
-      this.autotest.RunPhantomjs([runproject]).then(result => {
-        if (result) {
-          self.confirmationService.confirm({
-            message: 'Are you sure that you want to update the case test result?',
-            accept: () => {
-              self.RefreshProject();
-            }
-          });
-        }
-      });
-    }
   }
   RefreshProject(): void {
     this.autotest.GetTestResult().then(response => {
@@ -184,30 +153,18 @@ export class ScenarioComponent implements OnInit {
     });
   }
   exportTestCase(): void {
-    var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
-    let ressult = [{
-      "base_url": this.project.base_url,
-      "user": this.project.user,
-      "password": this.project.password,
-      "project_name": this.project.project_name,
-      "project_air_id": this.project.project_air_id,
-      "project_description": this.project.project_description,
-      "scenarios": [{
-        "scenario_id": this.scenario.scenario_id,
-        "scenario_name": this.scenario.scenario_name,
-        "scenario_description": this.scenario.scenario_description,
-        "scenario_url": this.scenario.scenario_url,
-        "cases": this.scenario.cases
-      }]
-    }];
-    var content = JSON.stringify(ressult);
-    var blob = new Blob([content]);
-    //aLink.download = "TestCase.json";
-    //aLink.href = URL.createObjectURL(blob);
-    aLink.setAttribute('href', URL.createObjectURL(blob));
-    aLink.setAttribute('download', "TestCase.json");
-    aLink.click();
-    window.URL.revokeObjectURL(aLink.href);
+    // var aLink = <HTMLLinkElement>document.getElementById("testcasefile");
+    // let ressult = [{
+    
+    // }];
+    // var content = JSON.stringify(ressult);
+    // var blob = new Blob([content]);
+    // //aLink.download = "TestCase.json";
+    // //aLink.href = URL.createObjectURL(blob);
+    // aLink.setAttribute('href', URL.createObjectURL(blob));
+    // aLink.setAttribute('download', "TestCase.json");
+    // aLink.click();
+    // window.URL.revokeObjectURL(aLink.href);
   }
   saveScenario(): void {
     let params = {
@@ -217,7 +174,7 @@ export class ScenarioComponent implements OnInit {
         Description: this.scenario.scenario_description,
         SName: this.scenario.scenario_name,
         Order: String(this.project.scenarioIDs.length + 1),
-        Url: this.project.base_url,//this.scenario.scenario_url
+        Url: "url",//this.scenario.scenario_url
         Cases: []
       }
     };
@@ -226,23 +183,23 @@ export class ScenarioComponent implements OnInit {
       params.Item.Cases = this.AWSScenario.Cases;
     }
     else{
-      this.project.scenarioIDs.push(this.scenario.scenario_id)
+      // this.project.scenarioIDs.push(this.scenario.scenario_id)
       let projectparams = {
         TableName : AWS_CONFIGURATION.PROJECTTABLENAME,
-        Key: { ProjectName : this.project.project_name },
+        Key: { ProjectName : this.currentProjectName},
         AttributeUpdates: {
           'ScenarioIDs': {
-            Action: 'PUT',
-            Value: this.project.scenarioIDs
+            Action: 'ADD',
+            Value: [this.scenario.scenario_id]
           },
         }
       };
       this.autotest.UpdateProject(projectparams);
+      this.autotest.CreateScenario(params);
     }
-    this.autotest.CreateScenario(params);
-    this.router.navigate(['/project', { name: this.project.project_name, IsView: false }]);
+    this.router.navigate(['/project', { name: this.currentProjectName, IsView: false }]);
   }
   createSep() {
-    this.router.navigate(['/Case', { projectid: this.project.project_air_id, scenarioid: this.scenario.scenario_id, caseid: this.scenario.cases.length + 1 }]);
+    this.router.navigate(['/Case', { projectName: this.currentProjectName,scenarioid:this.scenario.scenario_id, caseid: this.autotest.GenerateUUID() , source:"new" }]);
   }
 }

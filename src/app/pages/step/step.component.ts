@@ -25,40 +25,31 @@ export class StepComponent implements OnInit {
   Selname: Dropdown_M;
   Selname2: Dropdown_M;
   Selname3: Dropdown_M;
-  // stepS=new StepModule;
   setId: number;
-  // wait="";
-  // action="";
-  // enterValue="";
-  // typePath="";
   newsteporder: number;
-  // Stepdisplay:boolean;
   constructor() {
-
+  
   }
   ngOnChanges(): void {
     if (this.Dropdowns != null && this.Dropdowns.length > 0) {
       this.Selname = this.Dropdowns[1];
       this.Selname2 = this.Dropdowns[2];
       this.Selname3 = this.Dropdowns[0];
-    }else{
-      this.Selname = new Dropdown_M;
-      this.Selname2 =new Dropdown_M;
-      this.Selname3 = new Dropdown_M;
+      console.log(this.Selname)
     }
     if (this.StepM == undefined || this.StepM == null) {
       this.StepM = new StepModule;
     }
   }
   ngOnInit() {
-    if (this.Dropdowns != null && this.Dropdowns.length > 0) {
-      this.Selname = this.Dropdowns[1];
-      this.Selname2 = this.Dropdowns[2];
-      this.Selname3 = this.Dropdowns[0];
-    }
-    if (this.StepM == undefined || this.StepM == null) {
-      this.StepM = new StepModule;
-    }
+    // if (this.Dropdowns != null && this.Dropdowns.length > 0) {
+    //   this.Selname = this.Dropdowns[1];
+    //   this.Selname2 = this.Dropdowns[2];
+    //   this.Selname3 = this.Dropdowns[0];
+    // }
+    // if (this.StepM == undefined || this.StepM == null) {
+    //   this.StepM = new StepModule;
+    // }
   }
   addnew(): void {
     if (this.StepID == 0) {
@@ -67,10 +58,8 @@ export class StepComponent implements OnInit {
     this.StepM.action = this.Selname3.name;
     this.StepM.type = this.Selname.name;
     this.StepM.textTag = this.Selname2.name;
-    // this.StepM.action=this.action;
-    // this.StepM.wait=this.wait;
-    // this.StepM.enterValue=this.enterValue;
-    // this.StepM.typePath=this.typePath;
+    this.StepM.steps_result="start_test"
+    
     this.Step.emit(this.StepM);
     this.Stepdisplay.emit(false);
   }

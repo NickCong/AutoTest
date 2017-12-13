@@ -13,6 +13,9 @@ import { ProjectModule } from '../../common/models/project.module';
 import { ScenarioModule } from '../../common/models/scenario.module';
 import { Location } from '@angular/common';
 import { Dropdown } from 'primeng/primeng';
+import { AWS_CONFIGURATION } from '../../../environments/environment';
+import { RunAutoTestService } from '../../common/services/runautotest.service';
+import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 @Component({
   selector: 'app-case',
   templateUrl: './case.component.html',
@@ -20,58 +23,107 @@ import { Dropdown } from 'primeng/primeng';
 })
 export class CaseComponent implements OnInit {
   Stepdisplay: boolean = false;
-  currentProjectId: number;
-  currentScenarioId: number;
-  CaseId: number;
-  projects: ProjectModule[];
+  currentProjectId: string;
+  currentScenarioId: string;
+  CaseId: string;
   onecase: CaseModule;
-  project: ProjectModule;
-  scenario: ScenarioModule;
   steps: StepModule[];
   StepID: number;
   addStep: number;
   stepM: StepModule;
-  Stepid:number;
-  Dropdowns:Dropdown_M[];
+  Stepid: number;
+  Dropdowns: Dropdown_M[];
+  exist = false;
+  constructor(private router: Router, private route: ActivatedRoute, global: AllProject, private location: Location, private autotest: RunAutoTestService, private confirmationService: ConfirmationService) {
+    // this.projects = global.Projects;
+    this.currentProjectId = this.route.params["value"].projectName;
+    this.currentScenarioId = this.route.params["value"].scenarioid;
+    this.CaseId = this.route.params["value"].caseid;
+    this.exist = this.route.params["value"].source == 'exist';
+    
+    this.onecase = {
+      case_id: this.CaseId,
+      case_name: '',
+      case_description: '',
+      case_expect_result: '',
+      case_actual_result:'',
+      case_runtime:'',
+      case_starttime:'',
+      steps:[]
+    };
+    // this.onecase = new CaseModule;
+    // this.stepM = new StepModule;
+    this.Dropdowns = [];
+    this.steps=[];
+    this.autotest.GetCaseById(this.CaseId, (error, result) => {
+      this.onecase = new CaseModule;
+      this.onecase.case_id = result.Item.ID;
+      this.onecase.case_name = result.Item.Name;
+      this.onecase.case_description = result.Item.Description;
+      this.onecase.case_expect_result = result.Item.Expect_result;
+      this.onecase.case_actual_result = result.Item.Actual_result;
+      this.onecase.case_runtime= result.Item.RunTime;
+      this.onecase.case_starttime= result.Item.Starttime;
+      this.onecase.steps=result.Item.Steps;
+      if(this.onecase.steps!=null&&this.onecase.steps!=undefined){
+        this.steps=this.onecase.steps;
+      }
+    });
+    if(this.exist){
+      this.addStep=1;
+    }else{
 
-  constructor(private router: Router, private route: ActivatedRoute, global: AllProject, private location: Location) {
-    this.projects = global.Projects;
-    this.currentProjectId = parseInt(this.route.params["value"].projectid);
-    this.currentScenarioId = parseInt(this.route.params["value"].scenarioid);
-    this.CaseId = parseInt(this.route.params["value"].caseid);
-    this.project = this.projects[this.currentProjectId - 1];
-    this.scenario = this.project.scenarios[this.currentScenarioId - 1];
-    this.Dropdowns=[];
-    if (this.CaseId > this.scenario.cases.length) {
-      this.onecase = {
-        case_id: this.currentScenarioId + '-' + this.CaseId,
-        case_name: '',
-        case_description: '',
-        case_actual_result: '',
-        case_expect_result: '',
-        steps: []
-      };
-
-    } else {
-      this.onecase = this.scenario.cases[this.CaseId - 1];
-      this.steps = this.onecase.steps;
-      this.addStep = 1;
     }
   }
 
   ngOnInit() {
+    
   }
   createcase(): void {
-    if (this.CaseId > this.scenario.cases.length) {
-      this.scenario.cases.push(this.onecase)
+    let params = {
+      TableName: AWS_CONFIGURATION.CASETABLENAME,
+      Item: {
+        ID:this.CaseId,
+        Name: this.onecase.case_name,
+        Description: this.onecase.case_description,
+        Expect_result: this.onecase.case_expect_result,
+        Actual_result: this.onecase.case_actual_result,
+        Starttime: this.onecase.case_starttime,
+        RunTime:this.onecase.case_runtime,
+        Steps: []
+      }
+    };
+    if (this.exist) {
+      let Casesparams = {
+        TableName: AWS_CONFIGURATION.CASETABLENAME,
+        Key: { ID: this.CaseId },
+        AttributeUpdates: {
+          'steps': {
+            Action: 'PUT',
+            Value: this.steps
+          },
+        }
+      };
+      this.autotest.UpdateProject(Casesparams);
+
     } else {
-      this.scenario.cases[this.CaseId - 1] = this.onecase;
+      let scenarioparams = {
+        TableName: AWS_CONFIGURATION.SCENARIOTABLENAME,
+        Key: { ID: this.currentScenarioId },
+        AttributeUpdates: {
+          'Cases': {
+            Action: 'ADD',
+            Value: [this.CaseId]
+          },
+        }
+      };
+      this.autotest.UpdateProject(scenarioparams);
+      this.autotest.CreateProject(params);
     }
-    this.location.back();
+    this.router.navigate(['/scenario', { projectName: this.currentProjectId , scenarioid: this.currentScenarioId , source: "exist" }]);
   }
   showStepDialog() {
     this.stepM={ order: 0, action: '', wait:'',enterValue: '', type: '', typePath: '', steps_result:'' ,textTag:''};
-    this.Dropdowns=[];
     this.Stepid=this.steps.length+1;
     this.StepID = 0;
     this.Stepdisplay = true;
@@ -83,19 +135,21 @@ export class CaseComponent implements OnInit {
     });
   }
   editStep(i) {
-    this.stepM=this.steps[i-1];
-    this.Dropdowns.push({id:1,name:Operations.find(t=>t.label==this.stepM.action).label});
-    this.Dropdowns.push({id:2,name:SelectedItem.find(t=>t.label==this.stepM.type).label});
-    this.Dropdowns.push({id:3,name:SelectedItem2.find(t=>t.label==this.stepM.textTag).label});
+    this.stepM = this.steps[i - 1];
+    this.Dropdowns = [];
+    
+    this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: Operations.find(t => t.label == this.stepM.action).label });
+    this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: SelectedItem.find(t => t.label == this.stepM.type).label });
+    this.Dropdowns.push({ id: Operations.find(t => t.label == this.stepM.action).value.id, name: SelectedItem2.find(t => t.label == this.stepM.textTag).label });
     this.StepID = i;
     this.Stepdisplay = true;
   }
   getStep(e) {
     this.stepM = e;
     if (this.StepID != 0) {
-      let index=0;
+      let index = 0;
       this.steps.forEach(t => {
-        if (t.order == this.stepM.order) {        
+        if (t.order == this.stepM.order) {
           t.action = this.stepM.action;
           t.enterValue = this.stepM.enterValue;
           t.steps_result = this.stepM.steps_result;
@@ -107,7 +161,6 @@ export class CaseComponent implements OnInit {
       });
     } else {
       this.steps.push(e);
-
     }
   }
   getdisplay(e) {

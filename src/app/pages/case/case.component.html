@@ -34,7 +34,7 @@
       <div *ngFor='let step of onecase.steps;let i = index' class="caseinfo ViewListCss col-xs-3">
           <div class="row liRowCss">
             <ul *ngIf='step'>
-              Step ID {{step.order}}:<br />
+              Step ID {{step.order}}<br />
               Step Action: {{step.action}}<br />
               Step wait: {{step.wait}}<br />
               Step Enter Value: {{step.enterValue}}<br />
@@ -53,5 +53,4 @@
   </div>
   <p-dialog header="Title" [(visible)]="Stepdisplay" modal="modal" [minWidth]="300" [responsive]="true">
      <app-step [Dropdowns]="Dropdowns" [StepM]="stepM" [StepID]="StepID" [Stepid]="Stepid"(Step)="getStep($event)" (Stepdisplay)="getdisplay($event)"></app-step>
-    
   </p-dialog>
