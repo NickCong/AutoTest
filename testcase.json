@@ -1,0 +1,92 @@
+﻿[
+  {
+    "base_url": "https://dcnsales.ciostage.accenture.com",
+    "user": "zhaowei.sha",
+    "password": "!*(szw189",
+    "project_name": "SEP Auto Test",
+    "project_description": "Full test case of SEP",
+    "scenarios": [
+      {
+        "scenario_id": "6d647d11-6c38-4c8c-b311-0e148331bd63",
+        "scenario_name": "SC Download",
+        "scenario_description": "SC Download",
+        "scenario_url": "url",
+        "scenario_order": "1",
+        "cases": [
+          {
+            "case_order": "1",
+            "case_name": "SC Download",
+            "case_id": "86a96c61-988c-4e32-b2b8-becdf757e774",
+            "case_description": "SC Download",
+            "case_expect_result": "SC Download",
+            "case_actual_result": "Fail",
+            "case_starttime": "2017-12-22 04:12:07",
+            "case_runtime": "10.48296856880188 s",
+            "steps": [
+              {
+                "action": "Click",
+                "enterValue": "0",
+                "type": "Link Text",
+                "typePath": "Sales Collateral",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Pass",
+                "order": "1"
+              },
+              {
+                "action": "Click",
+                "enterValue": "0",
+                "type": "ID",
+                "typePath": "treenode_4",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Pass",
+                "order": "2"
+              },
+              {
+                "action": "Click",
+                "enterValue": "0",
+                "type": "ID",
+                "typePath": "treenode_17",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Pass",
+                "order": "3"
+              },
+              {
+                "action": "Click",
+                "enterValue": "0",
+                "type": "xpath",
+                "typePath": "//div[@id='17collapse']/div/label[2]",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Pass",
+                "order": "4"
+              },
+              {
+                "action": "Download",
+                "enterValue": "lambda.png",
+                "type": "xpath",
+                "typePath": "//table[@id='dataTable']/tbody/tr[4]/td[8]/a/img",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Fail for step Download //table[@id='dataTable']/tbody/tr[4]/td[8]/a/img: ",
+                "order": "5"
+              },
+              {
+                "action": "Click",
+                "enterValue": "1",
+                "type": "Link Text",
+                "typePath": "1",
+                "Wait": "0",
+                "texttag": "",
+                "steps_result": "Pass",
+                "order": "6"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
